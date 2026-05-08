@@ -10,7 +10,7 @@ interface MobileNavProps {
 
 export function MobileNav({ activeView, onViewChange }: MobileNavProps) {
   const { canInstall, install } = useInstallPrompt();
-  
+
   const navItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "library", label: "Library", icon: Library },
@@ -22,40 +22,37 @@ export function MobileNav({ activeView, onViewChange }: MobileNavProps) {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 backdrop-blur-lg safe-area-bottom md:hidden">
-      <div className="flex items-center justify-around h-16 px-2">
-        {navItems.map((item) => {
-          const isActive = activeView === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => item.id === "_install" ? install() : onViewChange(item.id)}
-              className={cn(
-                "flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl transition-all duration-200 min-w-[64px]",
-                isActive 
-                  ? "text-accent" 
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <div className="relative">
-                <item.icon className={cn("h-5 w-5 transition-transform", isActive && "scale-110")} />
+    <nav className="fixed bottom-3 left-3 right-3 z-40 safe-area-bottom md:hidden">
+      <div className="glass-strong rounded-2xl shadow-lift">
+        <div className="flex items-center justify-around px-1.5 py-1.5">
+          {navItems.map((item) => {
+            const isActive = activeView === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => (item.id === "_install" ? install() : onViewChange(item.id))}
+                className={cn(
+                  "relative flex flex-1 flex-col items-center justify-center gap-0.5 px-2 py-2 rounded-xl transition-colors",
+                  isActive ? "text-white" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
                 {isActive && (
-                  <motion.div
-                    layoutId="mobile-nav-indicator"
-                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-accent"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  <motion.span
+                    layoutId="mobile-nav-pill"
+                    className="absolute inset-0 rounded-xl bg-gradient-brand shadow-glow"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}
-              </div>
-              <span className={cn(
-                "text-[10px] font-medium transition-all",
-                isActive ? "opacity-100" : "opacity-70"
-              )}>
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
+                <span className="relative z-10 flex flex-col items-center gap-0.5">
+                  <item.icon className={cn("h-5 w-5 transition-transform", isActive && "scale-110")} />
+                  <span className={cn("text-[10px] font-semibold tracking-wide", !isActive && "opacity-80")}>
+                    {item.label}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );
