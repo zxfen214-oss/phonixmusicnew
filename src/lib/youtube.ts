@@ -18,7 +18,7 @@ export async function searchYouTube(query: string): Promise<Track[]> {
     .limit(10);
 
   // Create a map of edited songs by youtube_id for quick lookup
-  const editedSongsMap = new Map<string, typeof editedSongs[number]>();
+  const editedSongsMap = new Map<string, NonNullable<typeof editedSongs>[number]>();
   if (editedSongs) {
     editedSongs.forEach(song => {
       if (song.youtube_id) {
