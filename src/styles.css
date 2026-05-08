@@ -205,6 +205,17 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --font-karaoke: "Inter", system-ui, sans-serif;
+  --color-brand-1: hsl(var(--brand-1));
+  --color-brand-2: hsl(var(--brand-2));
+  --color-brand-3: hsl(var(--brand-3));
+
+  --animate-fade-in: fade-in 0.4s ease-out both;
+  --animate-fade-in-up: fade-in-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-scale-in: scale-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shimmer: shimmer 2.5s linear infinite;
+  --animate-gradient: gradient-x 8s ease infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2.4s ease-in-out infinite;
 }
 
 @layer base {
