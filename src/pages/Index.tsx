@@ -84,26 +84,10 @@ function AppContent() {
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="flex h-screen w-full overflow-hidden bg-background pt-[env(safe-area-inset-top)]"
-    >
+    <div className="flex h-screen w-full overflow-hidden bg-background pt-[env(safe-area-inset-top)]">
       <Sidebar activeView={activeView} onViewChange={setActiveView} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={activeView}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="flex-1 overflow-hidden"
-          >
-            {renderView()}
-          </motion.div>
-        </AnimatePresence>
+        <div className="flex-1 overflow-hidden">{renderView()}</div>
         <PlayerBar onOpenLyrics={handleOpenLyrics} onOpenMobilePlayer={handleOpenMobilePlayer} />
       </div>
       <MobileNav activeView={activeView} onViewChange={setActiveView} />
@@ -117,7 +101,7 @@ function AppContent() {
           <LyricsView onClose={() => setShowLyrics(false)} />
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
