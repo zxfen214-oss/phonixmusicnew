@@ -52,19 +52,14 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
     icon: Icon,
     label,
     accent,
-    delay = 0,
   }: {
     active?: boolean;
     onClick: () => void;
     icon: React.ComponentType<{ className?: string }>;
     label: string;
     accent?: boolean;
-    delay?: number;
   }) => (
-    <motion.button
-      initial={{ opacity: 0, x: -16 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+    <button
       onClick={onClick}
       className={cn(
         "relative flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200",
@@ -83,7 +78,7 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
       )}
       <Icon className={cn("h-5 w-5 transition-transform", active && "scale-110")} />
       <span>{label}</span>
-    </motion.button>
+    </button>
   );
 
   return (
@@ -96,14 +91,13 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 px-3 py-2">
-          {navItems.map((item, index) => (
+          {navItems.map((item) => (
             <NavButton
               key={item.id}
               active={activeView === item.id}
               onClick={() => onViewChange(item.id)}
               icon={item.icon}
               label={item.label}
-              delay={index * 0.04}
             />
           ))}
 
@@ -116,7 +110,6 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
             icon={Plus}
             label="Add Local Files"
             accent
-            delay={0.18}
           />
 
           {isAdmin && (
@@ -125,7 +118,6 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
               icon={Shield}
               label="Admin Panel"
               accent
-              delay={0.22}
             />
           )}
         </nav>
@@ -133,12 +125,7 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
         {/* User Section */}
         <div className="border-t border-border/60 p-3 space-y-1">
           {user && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.25 }}
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 mb-1"
-            >
+            <div className="flex items-center gap-3 rounded-xl px-3 py-2.5 mb-1">
               <div className="relative h-9 w-9 flex-shrink-0">
                 <div className="absolute inset-0 rounded-full bg-gradient-brand p-[1.5px]">
                   <div className="h-full w-full rounded-full bg-card flex items-center justify-center">
@@ -155,7 +142,7 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           )}
 
           <NavButton

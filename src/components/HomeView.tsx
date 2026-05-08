@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getAllCachedInfo, CacheInfo, formatBytes, getTotalCacheSize } from "@/lib/offlineCache";
 import { useOfflineStatus } from "@/hooks/useOfflineStatus";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TRIAL_DISMISSED_KEY = "phonix_trial_dismissed";
 const PLAY_COUNT_KEY = "phonix_play_counts";
@@ -142,13 +143,8 @@ function TopSongBanner({ track, onPlay, allTracks }: { track: Track; onPlay: (tr
 
 function SongTile({ track, onPlay, onAdd, index, allTracks, isOffline, isInLibrary }: { track: Track; onPlay: (track: Track, all: Track[]) => void; onAdd: (track: Track) => void; index: number; allTracks: Track[]; isOffline?: boolean; isInLibrary?: boolean }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.04, ease: [0.32, 0.72, 0, 1] }}
-      className="group cursor-pointer rounded-2xl overflow-hidden bg-secondary/40 hover:bg-secondary/70 transition-all duration-300 shadow-sm hover:shadow-lg"
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.97 }}
+    <div
+      className="group cursor-pointer rounded-2xl overflow-hidden glass card-hover"
       onClick={() => onPlay(track, allTracks)}
     >
       <div className="relative aspect-square overflow-hidden">
@@ -161,13 +157,14 @@ function SongTile({ track, onPlay, onAdd, index, allTracks, isOffline, isInLibra
           )}
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        <motion.button
-          className="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-accent text-accent-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <button
+          className="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-gradient-brand text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-glow"
+          aria-label="Play"
         >
           <Play className="h-4 w-4 ml-0.5" />
-        </motion.button>
-        <motion.button
+        </button>
+        <button
           className={cn(
             "absolute top-2 right-2 h-8 w-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg",
             isInLibrary ? "bg-accent text-accent-foreground" : "bg-black/50 hover:bg-accent text-white hover:text-accent-foreground"
@@ -176,10 +173,9 @@ function SongTile({ track, onPlay, onAdd, index, allTracks, isOffline, isInLibra
             e.stopPropagation();
             if (!isInLibrary) onAdd(track);
           }}
-          whileTap={{ scale: 0.85 }}
         >
           {isInLibrary ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-        </motion.button>
+        </button>
       </div>
       <div className="p-3">
         <div className="flex items-center gap-1">
@@ -188,7 +184,7 @@ function SongTile({ track, onPlay, onAdd, index, allTracks, isOffline, isInLibra
         </div>
         <p className="text-xs text-muted-foreground truncate mt-0.5">{track.artist}</p>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -328,32 +324,33 @@ export function HomeView() {
 
   if (isLoading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading...</p>
+      <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-8">
+        <div>
+          <Skeleton className="h-8 w-32 mb-2" />
+          <Skeleton className="h-4 w-48" />
+        </div>
+        <Skeleton className="h-32 rounded-2xl" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton className="aspect-square rounded-2xl" />
+              <Skeleton className="h-3 w-3/4" />
+              <Skeleton className="h-3 w-1/2" />
+            </div>
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="flex-1 flex flex-col h-full overflow-y-auto"
-    >
+    <div className="flex-1 flex flex-col h-full overflow-y-auto">
       <div className="px-4 md:px-8 py-6 space-y-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-        >
-          <h1 className="text-2xl md:text-3xl font-semibold">Home</h1>
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gradient-animated inline-block">Home</h1>
           <p className="text-muted-foreground text-sm mt-1">Curated picks for you</p>
-        </motion.div>
+        </div>
 
         {/* Trial Banner */}
         <AnimatePresence>
@@ -367,11 +364,7 @@ export function HomeView() {
 
         {/* Featured Grid - Song Tiles */}
         {tracks.length > 0 && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-          >
+          <section>
             <div className="flex items-center gap-2 mb-4">
               <Music2 className="h-5 w-5 text-accent" />
               <h2 className="text-xl font-semibold">Featured</h2>
@@ -381,20 +374,25 @@ export function HomeView() {
                 <SongTile key={track.id} track={track} onPlay={handlePlay} onAdd={handleAddToLibrary} index={idx} allTracks={tracks} isOffline={!!track.youtubeId && cachedIds.has(track.youtubeId)} isInLibrary={libraryTrackIds.has(track.id)} />
               ))}
             </div>
-          </motion.section>
+          </section>
         )}
 
         {/* Offline Downloads */}
         <OfflineSection />
 
         {tracks.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-64 text-center">
-            <Music2 className="h-12 w-12 text-muted-foreground/40 mb-4" />
-            <p className="text-muted-foreground">No songs available yet</p>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 bg-gradient-brand rounded-full blur-2xl opacity-30 animate-pulse-glow" />
+              <div className="relative h-20 w-20 rounded-full glass-strong flex items-center justify-center">
+                <Music2 className="h-9 w-9 text-accent" />
+              </div>
+            </div>
+            <p className="text-foreground font-semibold">No songs available yet</p>
             <p className="text-sm text-muted-foreground mt-1">Check back later for curated picks</p>
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }

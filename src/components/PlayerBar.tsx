@@ -61,7 +61,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
 
   if (!currentTrack) {
     return (
-      <div className="h-20 md:h-24 border-t border-border bg-player-bar/95 backdrop-blur-sm flex items-center justify-center mb-[calc(4rem+env(safe-area-inset-bottom))] md:mb-0 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+      <div className="h-20 md:h-24 border-t border-border/60 glass-strong flex items-center justify-center mb-[calc(4rem+env(safe-area-inset-bottom))] md:mb-0">
         <p className="text-muted-foreground text-sm">No track playing</p>
       </div>
     );
@@ -70,7 +70,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
   const currentTime = (progress / 100) * currentTrack.duration;
 
   return (
-    <div className="h-20 md:h-24 border-t border-border bg-player-bar/95 backdrop-blur-sm px-3 md:px-4 flex items-center gap-2 md:gap-4 mb-[calc(4rem+env(safe-area-inset-bottom))] md:mb-0 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+    <div className="h-20 md:h-24 border-t border-border/60 glass-strong px-3 md:px-4 flex items-center gap-2 md:gap-4 mb-[calc(4rem+env(safe-area-inset-bottom))] md:mb-0">
       {/* Track Info */}
       <div className="flex items-center gap-2 md:gap-3 flex-1 md:w-64 md:flex-initial min-w-0">
         <div 
@@ -121,7 +121,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
         </button>
         <button
           onClick={isPlaying ? pauseTrack : resumeTrack}
-          className="icon-button accent h-11 w-11"
+          className="icon-button h-11 w-11 bg-gradient-brand text-white shadow-glow"
         >
           <img src={isPlaying ? iconPause : iconPlay} alt={isPlaying ? "Pause" : "Play"} className="h-5 w-5 invert dark:invert" />
         </button>
@@ -225,7 +225,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
           </button>
           <button
             onClick={isPlaying ? pauseTrack : resumeTrack}
-            className="icon-button accent h-10 w-10"
+            className="icon-button h-10 w-10 bg-gradient-brand text-white shadow-glow"
           >
             <img src={isPlaying ? iconPause : iconPlay} alt={isPlaying ? "Pause" : "Play"} className="h-5 w-5 invert dark:invert" />
           </button>

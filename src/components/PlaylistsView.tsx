@@ -1,87 +1,64 @@
 import { useState } from "react";
 import { useLibrary } from "@/contexts/LibraryContext";
-import { usePlayer } from "@/contexts/PlayerContext";
 import { PlaylistCard } from "./PlaylistCard";
 import { CreatePlaylistDialog } from "./CreatePlaylistDialog";
 import { Plus, ListMusic } from "lucide-react";
-import { motion } from "framer-motion";
 
 export function PlaylistsView() {
   const { playlists } = useLibrary();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="flex-1 flex flex-col h-full overflow-hidden"
-    >
-      {/* Header */}
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-        className="px-4 md:px-8 py-6 border-b border-border flex items-center justify-between"
-      >
-        <h1 className="text-2xl md:text-3xl font-semibold">Playlists</h1>
-        <button 
+    <div className="flex-1 flex flex-col h-full overflow-hidden">
+      <div className="px-4 md:px-8 py-6 border-b border-border/60 flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gradient-animated inline-block">Playlists</h1>
+          <p className="text-muted-foreground text-sm mt-1 hidden sm:block">Your curated collections</p>
+        </div>
+        <button
           onClick={() => setShowCreateDialog(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground font-medium text-sm transition-all hover:opacity-90"
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-brand text-white font-medium text-sm shadow-glow hover:opacity-95 transition-all"
         >
           <Plus className="h-4 w-4" />
-          New Playlist
+          <span className="hidden sm:inline">New Playlist</span>
+          <span className="sm:hidden">New</span>
         </button>
-      </motion.div>
+      </div>
 
-      {/* Grid */}
       <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6">
         {playlists.length === 0 ? (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col items-center justify-center h-64 text-center"
-          >
-            <ListMusic className="h-16 w-16 mb-4 text-muted-foreground/30" />
-            <p className="text-muted-foreground text-lg">No playlists yet</p>
-            <p className="text-sm text-muted-foreground mt-1 mb-4">
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 bg-gradient-brand rounded-full blur-2xl opacity-30 animate-pulse-glow" />
+              <div className="relative h-20 w-20 rounded-full glass-strong flex items-center justify-center">
+                <ListMusic className="h-9 w-9 text-accent" />
+              </div>
+            </div>
+            <p className="text-foreground text-lg font-semibold">No playlists yet</p>
+            <p className="text-sm text-muted-foreground mt-1 mb-5">
               Create your first playlist to organize your music
             </p>
-            <button 
+            <button
               onClick={() => setShowCreateDialog(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground font-medium text-sm transition-all hover:opacity-90"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-brand text-white font-medium text-sm shadow-glow"
             >
               <Plus className="h-4 w-4" />
               Create Playlist
             </button>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6"
-          >
-            {playlists.map((playlist, idx) => (
-              <motion.div
-                key={playlist.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
-              >
-                <PlaylistCard playlist={playlist} />
-              </motion.div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+            {playlists.map((playlist) => (
+              <PlaylistCard key={playlist.id} playlist={playlist} />
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
 
-      {/* Create Playlist Dialog */}
       <CreatePlaylistDialog
         isOpen={showCreateDialog}
         onClose={() => setShowCreateDialog(false)}
       />
-    </motion.div>
+    </div>
   );
 }
