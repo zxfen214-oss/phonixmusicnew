@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { searchYouTube } from "@/lib/youtube";
-import { Search, Play, Plus, Youtube, Loader2, AlertCircle, MoreHorizontal, Shield, MessageSquare, ListPlus, Check } from "lucide-react";
+import { Search, Play, Plus, Youtube, Loader2, AlertCircle, MoreHorizontal, Shield, MessageSquare, ListPlus, Check, BadgeCheck, Sparkles } from "lucide-react";
 import { Track } from "@/types/music";
 import { usePlayer } from "@/contexts/PlayerContext";
 import { useLibrary } from "@/contexts/LibraryContext";
@@ -11,12 +11,12 @@ import { useToast } from "@/hooks/use-toast";
 import { AdminSongEditor } from "./AdminSongEditor";
 import { RequestAdminDialog } from "./RequestAdminDialog";
 import { AddToPlaylistDialog } from "./AddToPlaylistDialog";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
