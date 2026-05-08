@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { searchYouTube } from "@/lib/youtube";
-import { Search, Play, Plus, Youtube, Loader2, AlertCircle, MoreHorizontal, Shield, MessageSquare, ListPlus, Check, BadgeCheck, Sparkles } from "lucide-react";
+import { Search, Play, Plus, Youtube, AlertCircle, MoreHorizontal, Shield, MessageSquare, ListPlus, BadgeCheck, Sparkles } from "lucide-react";
 import { Track } from "@/types/music";
 import { usePlayer } from "@/contexts/PlayerContext";
 import { useLibrary } from "@/contexts/LibraryContext";
