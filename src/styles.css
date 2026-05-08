@@ -100,6 +100,24 @@
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
+
+  /* --- modern brand --- */
+  --brand-1: 4 90% 58%;       /* warm red */
+  --brand-2: 18 95% 60%;      /* vivid orange */
+  --brand-3: 340 88% 62%;     /* hot pink */
+  --gradient-brand: linear-gradient(135deg, hsl(var(--brand-1)) 0%, hsl(var(--brand-2)) 50%, hsl(var(--brand-3)) 100%);
+  --gradient-brand-soft: linear-gradient(135deg, hsl(var(--brand-1) / 0.18), hsl(var(--brand-3) / 0.12));
+  --gradient-surface: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%);
+
+  /* glass surfaces */
+  --glass-bg: 0 0% 100% / 0.65;
+  --glass-border: 0 0% 0% / 0.06;
+  --glass-shadow: 0 8px 32px -12px hsl(0 0% 0% / 0.18), 0 2px 6px -2px hsl(0 0% 0% / 0.06);
+
+  /* glows */
+  --shadow-glow: 0 0 0 1px hsl(var(--brand-1) / 0.18), 0 12px 40px -8px hsl(var(--brand-1) / 0.45);
+  --shadow-soft: 0 1px 2px hsl(0 0% 0% / 0.04), 0 8px 24px -8px hsl(0 0% 0% / 0.08);
+  --shadow-lift: 0 4px 12px -4px hsl(0 0% 0% / 0.12), 0 16px 48px -12px hsl(0 0% 0% / 0.18);
 }
 
 .dark {
@@ -135,6 +153,12 @@
   --active-overlay: 0 0% 100% / 0.08;
   --album-shadow: 0 8px 32px -8px hsl(0 0% 0% / 0.5);
   --logo-phonix: 0 0% 100%;
+  --glass-bg: 0 0% 8% / 0.55;
+  --glass-border: 0 0% 100% / 0.08;
+  --glass-shadow: 0 8px 32px -12px hsl(0 0% 0% / 0.55), 0 2px 6px -2px hsl(0 0% 0% / 0.4);
+  --gradient-surface: linear-gradient(180deg, hsl(0 0% 5%) 0%, hsl(0 0% 8%) 100%);
+  --shadow-soft: 0 1px 2px hsl(0 0% 0% / 0.4), 0 8px 24px -8px hsl(0 0% 0% / 0.5);
+  --shadow-lift: 0 4px 12px -4px hsl(0 0% 0% / 0.55), 0 16px 48px -12px hsl(0 0% 0% / 0.7);
 }
 
 @theme inline {
