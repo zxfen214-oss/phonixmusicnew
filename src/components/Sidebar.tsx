@@ -5,13 +5,13 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { FileImportDialog } from "./FileImportDialog";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
-import { 
+import {
   Home,
-  Library, 
-  ListMusic, 
-  Search, 
-  Settings, 
-  Sun, 
+  Library,
+  ListMusic,
+  Search,
+  Settings,
+  Sun,
   Moon,
   Plus,
   LogOut,
@@ -46,77 +46,110 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
     navigate("/auth");
   };
 
+  const NavButton = ({
+    active,
+    onClick,
+    icon: Icon,
+    label,
+    accent,
+    delay = 0,
+  }: {
+    active?: boolean;
+    onClick: () => void;
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+    accent?: boolean;
+    delay?: number;
+  }) => (
+    <motion.button
+      initial={{ opacity: 0, x: -16 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      onClick={onClick}
+      className={cn(
+        "relative flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200",
+        active
+          ? "text-foreground bg-accent/12"
+          : "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
+        accent && !active && "text-accent hover:text-accent"
+      )}
+    >
+      {active && (
+        <motion.span
+          layoutId="sidebar-active-pill"
+          className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-gradient-brand"
+          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+        />
+      )}
+      <Icon className={cn("h-5 w-5 transition-transform", active && "scale-110")} />
+      <span>{label}</span>
+    </motion.button>
+  );
+
   return (
     <>
-      <aside className="hidden md:flex h-full w-64 flex-col border-r border-border bg-sidebar">
+      <aside className="hidden md:flex h-full w-64 flex-col border-r border-border/60 bg-sidebar/80 backdrop-blur-xl">
         {/* Logo */}
-        <div className="flex h-16 items-center px-6">
+        <div className="flex h-16 items-center px-5">
           <Logo size="md" />
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-1 px-3 py-4">
+        <nav className="flex-1 space-y-1 px-3 py-2">
           {navItems.map((item, index) => (
-            <motion.button
+            <NavButton
               key={item.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05, duration: 0.3 }}
+              active={activeView === item.id}
               onClick={() => onViewChange(item.id)}
-              className={cn(
-                "nav-item w-full transition-all duration-200",
-                activeView === item.id && "active"
-              )}
-            >
-              <item.icon className="h-5 w-5" />
-              <span>{item.label}</span>
-            </motion.button>
+              icon={item.icon}
+              label={item.label}
+              delay={index * 0.04}
+            />
           ))}
 
-          {/* Add Local Files */}
-          <motion.button 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15, duration: 0.3 }}
-            onClick={() => setShowImportDialog(true)}
-            className="nav-item w-full mt-6 text-accent"
-          >
-            <Plus className="h-5 w-5" />
-            <span>Add Local Files</span>
-          </motion.button>
+          <div className="pt-4 pb-1 px-3">
+            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+          </div>
 
-          {/* Admin Link */}
+          <NavButton
+            onClick={() => setShowImportDialog(true)}
+            icon={Plus}
+            label="Add Local Files"
+            accent
+            delay={0.18}
+          />
+
           {isAdmin && (
-            <motion.button
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2, duration: 0.3 }}
+            <NavButton
               onClick={() => navigate("/admin")}
-              className="nav-item w-full text-accent"
-            >
-              <Shield className="h-5 w-5" />
-              <span>Admin Panel</span>
-            </motion.button>
+              icon={Shield}
+              label="Admin Panel"
+              accent
+              delay={0.22}
+            />
           )}
         </nav>
 
         {/* User Section */}
-        <div className="border-t border-border p-3 space-y-2">
-          {/* User Info */}
+        <div className="border-t border-border/60 p-3 space-y-1">
           {user && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="flex items-center gap-3 px-3 py-2"
+              transition={{ delay: 0.25 }}
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 mb-1"
             >
-              <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center">
-                <User className="h-4 w-4 text-accent" />
+              <div className="relative h-9 w-9 flex-shrink-0">
+                <div className="absolute inset-0 rounded-full bg-gradient-brand p-[1.5px]">
+                  <div className="h-full w-full rounded-full bg-card flex items-center justify-center">
+                    <User className="h-4 w-4 text-foreground" />
+                  </div>
+                </div>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{user.email}</p>
+                <p className="text-xs font-semibold truncate">{user.email}</p>
                 {isAdmin && (
-                  <div className="flex items-center gap-1 text-xs text-accent">
+                  <div className="flex items-center gap-1 text-[10px] font-medium text-accent">
                     <Shield className="h-3 w-3" />
                     <span>Admin</span>
                   </div>
@@ -125,51 +158,33 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
             </motion.div>
           )}
 
-          <button
+          <NavButton
             onClick={toggleTheme}
-            className="nav-item w-full"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-5 w-5" />
-            ) : (
-              <Moon className="h-5 w-5" />
-            )}
-            <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
-          </button>
-
-          <button 
+            icon={theme === "dark" ? Sun : Moon}
+            label={theme === "dark" ? "Light mode" : "Dark mode"}
+          />
+          <NavButton
             onClick={() => navigate("/settings")}
-            className="nav-item w-full"
-          >
-            <Settings className="h-5 w-5" />
-            <span>Settings</span>
-          </button>
-
+            icon={Settings}
+            label="Settings"
+          />
           {canInstall && (
-            <motion.button
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              onClick={install}
-              className="nav-item w-full text-accent"
-            >
-              <Download className="h-5 w-5" />
-              <span>Install App</span>
-            </motion.button>
+            <NavButton onClick={install} icon={Download} label="Install App" accent />
           )}
 
-          <button 
+          <button
             onClick={handleSignOut}
-            className="nav-item w-full text-destructive hover:text-destructive"
+            className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-destructive/90 hover:text-destructive hover:bg-destructive/10 transition-all"
           >
             <LogOut className="h-5 w-5" />
-            <span>Sign Out</span>
+            <span>Sign out</span>
           </button>
         </div>
       </aside>
 
-      <FileImportDialog 
-        isOpen={showImportDialog} 
-        onClose={() => setShowImportDialog(false)} 
+      <FileImportDialog
+        isOpen={showImportDialog}
+        onClose={() => setShowImportDialog(false)}
       />
     </>
   );

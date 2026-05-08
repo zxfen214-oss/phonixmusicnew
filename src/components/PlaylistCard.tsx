@@ -62,37 +62,42 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
     <>
       <motion.div 
         className="group relative cursor-pointer"
-        whileHover={{ scale: 1.02, y: -4 }}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -6 }}
         whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Artwork */}
         <div className="relative mb-3" onClick={handlePlay}>
-          <div className="aspect-square w-full rounded-xl overflow-hidden bg-secondary">
+          <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-secondary shadow-soft transition-shadow duration-300 group-hover:shadow-lift">
             {firstTrackArtwork ? (
               <img
                 src={firstTrackArtwork}
                 alt={playlist.name}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
             ) : (
-              <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-accent/20 to-accent/5">
-                <ListMusic className="h-12 w-12 text-muted-foreground/50" />
+              <div className="h-full w-full flex items-center justify-center bg-gradient-brand-soft">
+                <ListMusic className="h-12 w-12 text-foreground/40" />
               </div>
             )}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           </div>
           
           {/* Play Button Overlay */}
           {playlist.tracks.length > 0 && (
             <motion.button
-              initial={{ opacity: 0, y: 8 }}
-              whileHover={{ scale: 1.1 }}
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.94 }}
               onClick={(e) => {
                 e.stopPropagation();
                 handlePlay();
               }}
-              className="absolute bottom-2 right-2 h-10 w-10 rounded-full bg-accent text-accent-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
+              className="absolute bottom-3 right-3 h-11 w-11 rounded-full bg-gradient-brand text-white flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-glow"
             >
-              <Play className="h-5 w-5 ml-0.5" />
+              <Play className="h-5 w-5 ml-0.5 fill-current" />
             </motion.button>
           )}
         </div>
