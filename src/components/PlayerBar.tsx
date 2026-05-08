@@ -121,7 +121,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
         </button>
         <button
           onClick={isPlaying ? pauseTrack : resumeTrack}
-          className="icon-button accent h-11 w-11"
+          className="icon-button h-11 w-11 bg-gradient-brand text-white shadow-glow"
         >
           <img src={isPlaying ? iconPause : iconPlay} alt={isPlaying ? "Pause" : "Play"} className="h-5 w-5 invert dark:invert" />
         </button>
@@ -225,7 +225,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
           </button>
           <button
             onClick={isPlaying ? pauseTrack : resumeTrack}
-            className="icon-button accent h-10 w-10"
+            className="icon-button h-10 w-10 bg-gradient-brand text-white shadow-glow"
           >
             <img src={isPlaying ? iconPause : iconPlay} alt={isPlaying ? "Pause" : "Play"} className="h-5 w-5 invert dark:invert" />
           </button>
