@@ -1,7 +1,5 @@
 import { useState, useMemo } from "react";
 import { useLibrary } from "@/contexts/LibraryContext";
-import { usePlayer } from "@/contexts/PlayerContext";
-import { useAuth } from "@/contexts/AuthContext";
 import { TrackRow } from "./TrackRow";
 import { useOfflineStatus } from "@/hooks/useOfflineStatus";
 import { AdminSongEditor } from "./AdminSongEditor";
