@@ -1,4 +1,5 @@
 import { Playlist } from "@/types/music";
+import { Track } from "@/types/music";
 import { usePlayer } from "@/contexts/PlayerContext";
 import { TrackRow } from "./TrackRow";
 import { ArrowLeft, Play, Shuffle, ListMusic } from "lucide-react";
@@ -6,6 +7,7 @@ import { ArrowLeft, Play, Shuffle, ListMusic } from "lucide-react";
 interface Props {
   playlist: Playlist;
   onBack: () => void;
+  onViewAlbum?: (track: Track) => void;
 }
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -17,7 +19,7 @@ function shuffleArray<T>(arr: T[]): T[] {
   return a;
 }
 
-export function PlaylistDetailView({ playlist, onBack }: Props) {
+export function PlaylistDetailView({ playlist, onBack, onViewAlbum }: Props) {
   const { playTrack } = usePlayer();
   const tracks = playlist.tracks;
   const cover = tracks[0]?.artwork;
@@ -88,7 +90,7 @@ export function PlaylistDetailView({ playlist, onBack }: Props) {
         ) : (
           <div className="space-y-1">
             {tracks.map((track, i) => (
-              <TrackRow key={track.id} track={track} index={i} tracks={tracks} />
+              <TrackRow key={track.id} track={track} index={i} tracks={tracks} onViewAlbum={onViewAlbum} />
             ))}
           </div>
         )}
