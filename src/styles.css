@@ -46,6 +46,17 @@
 .amll-lyrics-host [class*="lyricBgLine"][class*="_active"] {
   opacity: 0.55 !important;
 }
+.amll-lyrics-contrast,
+.amll-lyrics-contrast * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: none !important;
+}
+.amll-lyrics-contrast [class*="lyricMainLine"][class*="_active"],
+.amll-lyrics-contrast [class*="lyricLine"][class*="_active"] {
+  color: #ee5365 !important;
+  -webkit-text-fill-color: #ee5365 !important;
+}
 @media (max-width: 767px) {
   .amll-lyrics-host-mobile {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 70%, transparent 96%);
