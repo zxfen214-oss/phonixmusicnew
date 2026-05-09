@@ -1,5 +1,4 @@
-import { Playlist } from "@/types/music";
-import { Track } from "@/types/music";
+import { Playlist, Track } from "@/types/music";
 import { usePlayer } from "@/contexts/PlayerContext";
 import { TrackRow } from "./TrackRow";
 import { ArrowLeft, Play, Shuffle, ListMusic } from "lucide-react";
