@@ -24,9 +24,10 @@ import { useToast } from "@/hooks/use-toast";
 
 interface PlaylistCardProps {
   playlist: Playlist;
+  onOpen?: () => void;
 }
 
-export function PlaylistCard({ playlist }: PlaylistCardProps) {
+export function PlaylistCard({ playlist, onOpen }: PlaylistCardProps) {
   const { playTrack } = usePlayer();
   const { removePlaylist } = useLibrary();
   const { toast } = useToast();
@@ -39,6 +40,11 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
     if (playlist.tracks.length > 0) {
       playTrack(playlist.tracks[0], playlist.tracks);
     }
+  };
+
+  const handleOpen = () => {
+    if (onOpen) onOpen();
+    else handlePlay();
   };
 
   const handleDelete = async () => {
@@ -69,7 +75,7 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Artwork */}
-        <div className="relative mb-3" onClick={handlePlay}>
+        <div className="relative mb-3" onClick={handleOpen}>
           <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-secondary shadow-soft transition-shadow duration-300 group-hover:shadow-lift">
             {firstTrackArtwork ? (
               <img
@@ -104,7 +110,7 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
 
         {/* Info */}
         <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0" onClick={handlePlay}>
+          <div className="flex-1 min-w-0" onClick={handleOpen}>
             <h3 className="font-medium truncate text-sm">{playlist.name}</h3>
             <p className="text-xs text-muted-foreground truncate">
               {trackCount} {trackCount === 1 ? "track" : "tracks"}

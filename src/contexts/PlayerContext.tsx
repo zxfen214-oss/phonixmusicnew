@@ -69,6 +69,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const repeatRef = useRef<'none' | 'one' | 'all'>('none');
   useEffect(() => { repeatRef.current = state.repeat; }, [state.repeat]);
 
+  // Advances to a specific track from inside callbacks (audio.onended, etc.)
+  // Uses a ref to avoid circular callback dependencies.
+  const advanceToTrackRef = useRef<(track: Track) => void>(() => {});
+
 
   // Hard cleanup of any current audio source (audio element + YouTube player + object URLs)
   const stopCurrentSource = useCallback(() => {
@@ -293,13 +297,19 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
         setState(prev => {
           const nextIndex = prev.queueIndex + 1;
+          let nextT: Track | null = null;
+          let newIdx = prev.queueIndex;
           if (nextIndex < prev.queue.length) {
-            const nextTrack = prev.queue[nextIndex];
-            return { ...prev, currentTrack: nextTrack, queueIndex: nextIndex, progress: 0 };
+            nextT = prev.queue[nextIndex];
+            newIdx = nextIndex;
+          } else if (repeatRef.current === 'all' && prev.queue.length > 0) {
+            nextT = prev.queue[0];
+            newIdx = 0;
           }
-          // End of queue: loop back if repeat=all
-          if (repeatRef.current === 'all' && prev.queue.length > 0) {
-            return { ...prev, currentTrack: prev.queue[0], queueIndex: 0, progress: 0 };
+          if (nextT) {
+            const t = nextT;
+            setTimeout(() => advanceToTrackRef.current(t), 0);
+            return { ...prev, currentTrack: nextT, queueIndex: newIdx, progress: 0 };
           }
           return { ...prev, isPlaying: false };
         });
@@ -375,12 +385,19 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
         setState(prev => {
           const nextIndex = prev.queueIndex + 1;
+          let nextT: Track | null = null;
+          let newIdx = prev.queueIndex;
           if (nextIndex < prev.queue.length) {
-            const nextTrack = prev.queue[nextIndex];
-            return { ...prev, currentTrack: nextTrack, queueIndex: nextIndex, progress: 0 };
+            nextT = prev.queue[nextIndex];
+            newIdx = nextIndex;
+          } else if (repeatRef.current === 'all' && prev.queue.length > 0) {
+            nextT = prev.queue[0];
+            newIdx = 0;
           }
-          if (repeatRef.current === 'all' && prev.queue.length > 0) {
-            return { ...prev, currentTrack: prev.queue[0], queueIndex: 0, progress: 0 };
+          if (nextT) {
+            const t = nextT;
+            setTimeout(() => advanceToTrackRef.current(t), 0);
+            return { ...prev, currentTrack: nextT, queueIndex: newIdx, progress: 0 };
           }
           return { ...prev, isPlaying: false };
         });
@@ -528,7 +545,30 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     });
   }, [loadYouTubeVideo, loadLocalAudio, loadCachedOrRemoteAudio]);
 
+  // Wire up advanceToTrackRef so audio.onended (in cached/local loaders) can
+  // actually load the next track's audio source even when the app is in the
+  // background. Without this, only the React state changed but no audio
+  // element/youtube player was re-instantiated for the new track.
+  useEffect(() => {
+    advanceToTrackRef.current = (track: Track) => {
+      const myToken = ++loadTokenRef.current;
+      stopCurrentSource();
+      if (track.source === 'youtube' && track.youtubeId) {
+        loadCachedOrRemoteAudio(track, myToken).then(usedCached => {
+          if (myToken !== loadTokenRef.current) return;
+          if (!usedCached) loadYouTubeVideo(track.youtubeId!);
+        });
+      } else {
+        loadCachedOrRemoteAudio(track, myToken).then(usedCached => {
+          if (myToken !== loadTokenRef.current) return;
+          if (!usedCached) loadLocalAudio(track);
+        });
+      }
+    };
+  }, [loadCachedOrRemoteAudio, loadYouTubeVideo, loadLocalAudio, stopCurrentSource]);
+
   const seekTo = useCallback((progress: number) => {
+    
     if (!state.currentTrack) return;
     
     const duration = state.currentTrack.duration;

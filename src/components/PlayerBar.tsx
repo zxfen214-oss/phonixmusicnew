@@ -61,7 +61,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
 
   if (!currentTrack) {
     return (
-      <div className="h-20 md:h-24 border-t border-border/60 glass-strong flex items-center justify-center mb-[calc(4rem+env(safe-area-inset-bottom))] md:mb-0">
+      <div className="h-16 md:h-24 mx-3 md:mx-0 mb-[calc(5rem+env(safe-area-inset-bottom))] md:mb-0 rounded-2xl md:rounded-none md:border-t md:border-border/60 glass-strong flex items-center justify-center shadow-lift md:shadow-none">
         <p className="text-muted-foreground text-sm">No track playing</p>
       </div>
     );
@@ -70,7 +70,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
   const currentTime = (progress / 100) * currentTrack.duration;
 
   return (
-    <div className="h-20 md:h-24 border-t border-border/60 glass-strong px-3 md:px-4 flex items-center gap-2 md:gap-4 mb-[calc(4rem+env(safe-area-inset-bottom))] md:mb-0">
+    <div className="h-20 md:h-24 mx-3 md:mx-0 mb-[calc(5rem+env(safe-area-inset-bottom))] md:mb-0 rounded-2xl md:rounded-none md:border-t md:border-border/60 glass-strong px-3 md:px-4 flex items-center gap-2 md:gap-4 shadow-lift md:shadow-none overflow-hidden">
       {/* Track Info */}
       <div className="flex items-center gap-2 md:gap-3 flex-1 md:w-64 md:flex-initial min-w-0">
         <div 
@@ -117,16 +117,16 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
       {/* Mobile Controls - Simplified */}
       <div className="flex md:hidden items-center gap-1">
         <button onClick={previousTrack} className="icon-button h-9 w-9">
-          <img src={iconPrev} alt="Previous" className="h-4 w-4 invert dark:invert" />
+          <img src={iconPrev} alt="Previous" className="h-4 w-4 brightness-0 invert" />
         </button>
         <button
           onClick={isPlaying ? pauseTrack : resumeTrack}
           className="icon-button h-11 w-11 bg-gradient-brand text-white shadow-glow"
         >
-          <img src={isPlaying ? iconPause : iconPlay} alt={isPlaying ? "Pause" : "Play"} className="h-5 w-5 invert dark:invert" />
+          <img src={isPlaying ? iconPause : iconPlay} alt={isPlaying ? "Pause" : "Play"} className="h-5 w-5 brightness-0 invert" />
         </button>
         <button onClick={nextTrack} className="icon-button h-9 w-9">
-          <img src={iconNext} alt="Next" className="h-4 w-4 invert dark:invert" />
+          <img src={iconNext} alt="Next" className="h-4 w-4 brightness-0 invert" />
         </button>
 
         {/* Playback speed (popover) */}
@@ -206,7 +206,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
       {/* Desktop Controls - Full */}
       <div className="hidden md:flex flex-1 flex-col items-center gap-2 max-w-xl relative">
         {(audioFormat || isLossless) && (
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 pointer-events-none">
+          <div className="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-none z-10">
             <LosslessBadge format={audioFormat ?? 'lossless'} />
           </div>
         )}
@@ -221,16 +221,16 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
             <Shuffle className="h-4 w-4" />
           </button>
           <button onClick={previousTrack} className="icon-button h-9 w-9">
-            <img src={iconPrev} alt="Previous" className="h-5 w-5 invert dark:invert" />
+            <img src={iconPrev} alt="Previous" className="h-5 w-5 brightness-0 invert" />
           </button>
           <button
             onClick={isPlaying ? pauseTrack : resumeTrack}
             className="icon-button h-10 w-10 bg-gradient-brand text-white shadow-glow"
           >
-            <img src={isPlaying ? iconPause : iconPlay} alt={isPlaying ? "Pause" : "Play"} className="h-5 w-5 invert dark:invert" />
+            <img src={isPlaying ? iconPause : iconPlay} alt={isPlaying ? "Pause" : "Play"} className="h-5 w-5 brightness-0 invert" />
           </button>
           <button onClick={nextTrack} className="icon-button h-9 w-9">
-            <img src={iconNext} alt="Next" className="h-5 w-5 invert dark:invert" />
+            <img src={iconNext} alt="Next" className="h-5 w-5 brightness-0 invert" />
           </button>
           <button
             onClick={toggleRepeat}
