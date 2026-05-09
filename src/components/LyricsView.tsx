@@ -968,7 +968,7 @@ function LyricsContent({
 }
 
 // ─── Static Lyrics (scrollable plain text, 15px paragraphs) ───
-function StaticLyricsContent({ text, isMobile }: { text: string; isMobile: boolean }) {
+function StaticLyricsContent({ text, isMobile, increaseContrast = false }: { text: string; isMobile: boolean; increaseContrast?: boolean }) {
   const hasText = text.trim().length > 0;
   return (
     <div className="relative w-full h-full overflow-y-auto" style={{ padding: isMobile ? '20px' : '20px 0' }}>
@@ -977,7 +977,7 @@ function StaticLyricsContent({ text, isMobile }: { text: string; isMobile: boole
           <p className="text-white/40" style={{ fontSize: '14px' }}>No static lyrics available for this track.</p>
         </div>
       ) : (
-        <div style={{ fontSize: '15px', lineHeight: 1.8, color: 'rgba(255,255,255,0.75)', fontWeight: 400 }}>
+        <div style={{ fontSize: '15px', lineHeight: 1.8, color: increaseContrast ? '#ffffff' : 'rgba(255,255,255,0.75)', fontWeight: 400 }}>
           {text.split('\n\n').length > 1
             ? text.split('\n\n').map((paragraph, i) => (
                 <p key={i} style={{ marginBottom: '16px', whiteSpace: 'pre-wrap' }}>{paragraph}</p>
