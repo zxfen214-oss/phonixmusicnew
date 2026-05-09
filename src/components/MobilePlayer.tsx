@@ -10,6 +10,7 @@ import iconNext from "@/assets/icon-next.png";
 import iconPrev from "@/assets/icon-prev.png";
 import lyricsIcon from "@/assets/lyrics-icon.png";
 import LyricsBackground from "@/components/LyricsBackground";
+import { useTheme } from "@/contexts/ThemeContext";
 
 import { preloadPlayerIcons, preloadArtwork } from "@/lib/preloadPlayerAssets";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,7 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
     seekTo,
     setVolume,
   } = usePlayer();
+  const { increaseContrast } = useTheme();
 
   const [isDraggingProgress, setIsDraggingProgress] = useState(false);
   
@@ -129,9 +131,11 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
         >
           {/* AMLL MeshGradient background — matches the lyrics tab */}
           <div className="absolute inset-0 z-0" style={{ background: '#000' }}>
-            <div className="absolute inset-0 opacity-60">
-              <LyricsBackground albumSrc={currentTrack.artwork} flowSpeed={2} />
-            </div>
+            {!increaseContrast && (
+              <div className="absolute inset-0 opacity-60 mesh-background">
+                <LyricsBackground albumSrc={currentTrack.artwork} flowSpeed={2} />
+              </div>
+            )}
             <div className="absolute inset-0 bg-black/30" />
           </div>
 
@@ -217,7 +221,7 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
               </button>
               <button
                 onClick={toggleRepeat}
-                className={cn("p-2 active:scale-90 transition-transform", repeat !== 'none' ? "text-white" : "text-white/50")}
+                className={cn("p-2 active:scale-90 transition-transform", repeat !== 'none' || increaseContrast ? "text-accent" : "text-white/50")}
                 title="Repeat"
               >
                 {repeat === 'one' ? <Repeat1 className="w-5 h-5" /> : <Repeat className="w-5 h-5" />}
@@ -253,11 +257,11 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
                 title={hasLyrics ? "Lyrics" : "No lyrics available"}
               >
                 <img
-                  src={lyricsIcon}
+                  src={increaseContrast ? "/src/assets/lyrics-icon-contrast.png" : lyricsIcon}
                   alt="Lyrics"
                   className="w-[22px] h-[22px] object-contain"
                   style={{
-                    filter: hasLyrics ? 'brightness(0) invert(0.7)' : 'brightness(0) invert(0.4)',
+                    filter: increaseContrast ? 'none' : hasLyrics ? 'brightness(0) invert(0.7)' : 'brightness(0) invert(0.4)',
                     opacity: hasLyrics ? 0.85 : 0.35,
                   }}
                 />
