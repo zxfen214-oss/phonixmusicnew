@@ -580,7 +580,8 @@ const MemoKaraokeLine = React.memo(KaraokeLine, (prev, next) => {
     prev.lineEndTime !== next.lineEndTime ||
     prev.isCurrentLine !== next.isCurrentLine ||
     prev.isMobile !== next.isMobile ||
-    prev.charLimit !== next.charLimit
+    prev.charLimit !== next.charLimit ||
+    prev.increaseContrast !== next.increaseContrast
   ) {
     return false;
   }
