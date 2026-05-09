@@ -21,7 +21,6 @@ import {
   Eye
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface SettingsProps {
@@ -70,10 +69,7 @@ export default function Settings({ embedded = false }: SettingsProps) {
         <StaggerContainer className="space-y-6">
           {/* Account Section */}
           <StaggerItem>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-6 rounded-xl border border-border bg-card"
-            >
+            <div className="p-6 rounded-xl border border-border bg-card">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <User className="h-5 w-5 text-accent" />
                 Account
@@ -112,15 +108,12 @@ export default function Settings({ embedded = false }: SettingsProps) {
                   Sign Out
                 </Button>
               </div>
-            </motion.div>
+            </div>
           </StaggerItem>
 
           {/* Appearance Section */}
           <StaggerItem>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-6 rounded-xl border border-border bg-card"
-            >
+            <div className="p-6 rounded-xl border border-border bg-card">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Palette className="h-5 w-5 text-accent" />
                 Appearance
@@ -147,7 +140,7 @@ export default function Settings({ embedded = false }: SettingsProps) {
                   />
                 </div>
               </div>
-            </motion.div>
+            </div>
           </StaggerItem>
 
           {/* Accessibility Section */}
@@ -177,10 +170,7 @@ export default function Settings({ embedded = false }: SettingsProps) {
 
           {/* Lyrics Section */}
           <StaggerItem>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-6 rounded-xl border border-border bg-card"
-            >
+            <div className="p-6 rounded-xl border border-border bg-card">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Eye className="h-5 w-5 text-accent" />
                 Lyrics
@@ -200,15 +190,12 @@ export default function Settings({ embedded = false }: SettingsProps) {
                   />
                 </div>
               </div>
-            </motion.div>
+            </div>
           </StaggerItem>
 
           {/* Playback Section */}
           <StaggerItem>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-6 rounded-xl border border-border bg-card"
-            >
+            <div className="p-6 rounded-xl border border-border bg-card">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Volume2 className="h-5 w-5 text-accent" />
                 Playback
@@ -233,15 +220,12 @@ export default function Settings({ embedded = false }: SettingsProps) {
                   <Switch id="crossfade" />
                 </div>
               </div>
-            </motion.div>
+            </div>
           </StaggerItem>
 
           {/* Notifications Section */}
           <StaggerItem>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-6 rounded-xl border border-border bg-card"
-            >
+            <div className="p-6 rounded-xl border border-border bg-card">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Bell className="h-5 w-5 text-accent" />
                 Notifications
@@ -257,7 +241,7 @@ export default function Settings({ embedded = false }: SettingsProps) {
                   <Switch id="now-playing" />
                 </div>
               </div>
-            </motion.div>
+            </div>
           </StaggerItem>
 
           {/* Offline Downloads Section */}
@@ -271,10 +255,7 @@ export default function Settings({ embedded = false }: SettingsProps) {
 
           {/* About Section */}
           <StaggerItem>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-6 rounded-xl border border-border bg-card"
-            >
+            <div className="p-6 rounded-xl border border-border bg-card">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Info className="h-5 w-5 text-accent" />
                 About
@@ -284,7 +265,7 @@ export default function Settings({ embedded = false }: SettingsProps) {
                 <p>Your personal music player with YouTube integration and synced lyrics.</p>
                 <p className="pt-2">Made with ❤️</p>
               </div>
-            </motion.div>
+            </div>
           </StaggerItem>
         </StaggerContainer>
       </div>
