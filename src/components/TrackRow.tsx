@@ -1,7 +1,7 @@
 import { Track } from "@/types/music";
 import { usePlayer } from "@/contexts/PlayerContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Play, Pause, MoreHorizontal, Youtube, Pencil, Trash2, Shield, MessageSquare, ListPlus, WifiOff } from "lucide-react";
+import { Play, Pause, MoreHorizontal, Youtube, Pencil, Trash2, Shield, MessageSquare, ListPlus, WifiOff, Disc3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { MetadataEditor } from "./MetadataEditor";
@@ -10,7 +10,6 @@ import { RequestAdminDialog } from "./RequestAdminDialog";
 import { AddToPlaylistDialog } from "./AddToPlaylistDialog";
 import { DownloadButton } from "./DownloadButton";
 import { useLibrary } from "@/contexts/LibraryContext";
-import { motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +23,7 @@ interface TrackRowProps {
   index: number;
   tracks: Track[];
   isOffline?: boolean;
+  onViewAlbum?: (track: Track) => void;
 }
 
 function formatTime(seconds: number): string {
@@ -32,7 +32,7 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-export function TrackRow({ track, index, tracks, isOffline }: TrackRowProps) {
+export function TrackRow({ track, index, tracks, isOffline, onViewAlbum }: TrackRowProps) {
   const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = usePlayer();
   const { removeTrack, updateTrackMetadata } = useLibrary();
   const { isAdmin } = useAuth();
@@ -71,17 +71,9 @@ export function TrackRow({ track, index, tracks, isOffline }: TrackRowProps) {
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ 
-          duration: 0.4, 
-          delay: index * 0.03,
-          ease: [0.32, 0.72, 0, 1]
-        }}
-        whileHover={{ backgroundColor: "hsl(var(--secondary) / 0.5)" }}
+      <div
         className={cn(
-          "group flex items-center gap-4 px-4 py-3 rounded-lg transition-colors duration-200",
+          "group flex items-center gap-4 px-4 py-3 rounded-lg transition-colors duration-150 hover:bg-secondary/50",
           isCurrentTrack && "bg-secondary/70"
         )}
       >
@@ -173,6 +165,10 @@ export function TrackRow({ track, index, tracks, isOffline }: TrackRowProps) {
               <ListPlus className="h-4 w-4 mr-2" />
               Add to Playlist
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onViewAlbum?.(track)} disabled={!track.album}>
+              <Disc3 className="h-4 w-4 mr-2" />
+              View Album
+            </DropdownMenuItem>
             
             <DropdownMenuItem onClick={() => setShowEditor(true)}>
               <Pencil className="h-4 w-4 mr-2" />
@@ -201,7 +197,7 @@ export function TrackRow({ track, index, tracks, isOffline }: TrackRowProps) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </motion.div>
+      </div>
 
       {showEditor && (
         <MetadataEditor
