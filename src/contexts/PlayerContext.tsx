@@ -546,8 +546,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, [loadYouTubeVideo, loadLocalAudio, loadCachedOrRemoteAudio]);
 
   const seekTo = useCallback((progress: number) => {
-    // (advanceToTrackRef wired below)
-    void 0;
+    
     if (!state.currentTrack) return;
     
     const duration = state.currentTrack.duration;
