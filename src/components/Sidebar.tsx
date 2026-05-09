@@ -20,7 +20,6 @@ import {
   Download,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 
 interface SidebarProps {
   activeView: string;
@@ -69,13 +68,12 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
         accent && !active && "text-accent hover:text-accent"
       )}
     >
-      {active && (
-        <motion.span
-          layoutId="sidebar-active-pill"
-          className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-gradient-brand"
-          transition={{ type: "spring", stiffness: 380, damping: 30 }}
-        />
-      )}
+      <span
+        className={cn(
+          "absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-gradient-brand transition-opacity duration-150",
+          active ? "opacity-100" : "opacity-0"
+        )}
+      />
       <Icon className={cn("h-5 w-5 transition-transform", active && "scale-110")} />
       <span>{label}</span>
     </button>
