@@ -1792,11 +1792,11 @@ export function LyricsView({ onClose }: LyricsViewProps) {
             <div className="flex items-center justify-center gap-6 mt-3">
               <button onClick={(e) => { e.stopPropagation(); toggleRepeat(); resetMobileControlsTimer(); }} className="p-2 rounded-full hover:bg-white/10 transition-colors">
                 {repeat === 'one' ? (
-                  <Repeat1 className="h-5 w-5 text-white" />
+                  <Repeat1 className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white")} />
                 ) : repeat === 'all' ? (
-                  <Repeat className="h-5 w-5 text-white" />
+                  <Repeat className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white")} />
                 ) : (
-                  <Repeat className="h-5 w-5 text-white/40" />
+                  <Repeat className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/40")} />
                 )}
               </button>
               <button onClick={(e) => { e.stopPropagation(); previousTrack(); resetMobileControlsTimer(); }} className="p-3 rounded-full hover:bg-white/10 transition-colors">
@@ -1814,7 +1814,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                 <img src={iconNext} alt="Next" className="h-6 w-6 brightness-0 invert" />
               </button>
               <button onClick={(e) => { e.stopPropagation(); currentTrack && setShowPlaylistDialog(true); resetMobileControlsTimer(); }} className="p-2 rounded-full hover:bg-white/10 transition-colors">
-                <ListPlus className="h-5 w-5 text-white/60" />
+                <ListPlus className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/60")} />
               </button>
             </div>
 
