@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useLibrary } from "@/contexts/LibraryContext";
 import { TrackRow } from "./TrackRow";
+import { AlbumDetailView } from "./AlbumDetailView";
 import { useOfflineStatus } from "@/hooks/useOfflineStatus";
 import { AdminSongEditor } from "./AdminSongEditor";
 import { Search, SlidersHorizontal, Library as LibraryIcon } from "lucide-react";
@@ -19,6 +20,7 @@ export function LibraryView() {
   const [sortBy, setSortBy] = useState<SortOption>("recent");
   const [filterBy, setFilterBy] = useState<FilterOption>("all");
   const [editingTrack, setEditingTrack] = useState<Track | null>(null);
+  const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
 
   const filteredAndSortedTracks = useMemo(() => {
     let filtered = [...tracks];
@@ -70,6 +72,23 @@ export function LibraryView() {
     { value: "local", label: "Local" },
     { value: "youtube", label: "YouTube" },
   ];
+
+  const selectedAlbumTracks = useMemo(() => {
+    if (!selectedAlbum) return [];
+    const normalized = selectedAlbum.trim().toLowerCase();
+    return tracks.filter((track) => track.album.trim().toLowerCase() === normalized);
+  }, [selectedAlbum, tracks]);
+
+  if (selectedAlbum) {
+    return (
+      <AlbumDetailView
+        albumName={selectedAlbum}
+        tracks={selectedAlbumTracks}
+        onBack={() => setSelectedAlbum(null)}
+        onViewAlbum={(track) => setSelectedAlbum(track.album)}
+      />
+    );
+  }
 
   if (isLoading) {
     return (
@@ -185,6 +204,7 @@ export function LibraryView() {
                       index={index}
                       tracks={filteredAndSortedTracks}
                       isOffline={!!track.youtubeId && cachedIds.has(track.youtubeId)}
+                      onViewAlbum={(albumTrack) => setSelectedAlbum(albumTrack.album)}
                     />
                   ))}
                 </div>
