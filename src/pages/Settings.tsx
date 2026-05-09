@@ -30,7 +30,7 @@ interface SettingsProps {
 
 export default function Settings({ embedded = false }: SettingsProps) {
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, increaseContrast, setIncreaseContrast } = useTheme();
   const { user, isAdmin, signOut } = useAuth();
 
   const [lyricsBlurEnabled, setLyricsBlurEnabled] = useState(() => {
@@ -148,6 +148,31 @@ export default function Settings({ embedded = false }: SettingsProps) {
                 </div>
               </div>
             </motion.div>
+          </StaggerItem>
+
+          {/* Accessibility Section */}
+          <StaggerItem>
+            <div className="p-6 rounded-xl border border-border bg-card">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Eye className="h-5 w-5 text-accent" />
+                Accessibility
+              </h2>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <Label htmlFor="increase-contrast">Increase Contrast</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Use a black background, cleaner lyrics, and stronger accent controls
+                    </p>
+                  </div>
+                  <Switch
+                    id="increase-contrast"
+                    checked={increaseContrast}
+                    onCheckedChange={setIncreaseContrast}
+                  />
+                </div>
+              </div>
+            </div>
           </StaggerItem>
 
           {/* Lyrics Section */}
