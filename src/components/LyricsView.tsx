@@ -1632,7 +1632,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                   </div>
                   <div ref={lyricsContainerRef} className="relative min-h-0 flex-1">
                     {staticLyricsMode ? (
-                      <StaticLyricsContent text={staticLyricsText} isMobile={false} />
+                      <StaticLyricsContent text={staticLyricsText} isMobile={false} increaseContrast={increaseContrast} />
                     ) : (
                       amllLines.length > 0 ? (
                         <AMLLLyricsPlayer
@@ -1642,7 +1642,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                           fontSize={45}
                           enableBlur={false}
                           onLineClick={amllSeek}
-                          className="h-full w-full"
+                          className={cn("h-full w-full", increaseContrast && "amll-lyrics-contrast")}
                         />
                       ) : (
                         <LyricsContent {...lyricsContentProps} isMobile={false} />
@@ -1706,7 +1706,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
               style={{ overflow: staticLyricsMode ? 'auto' : 'hidden' }}
             >
               {staticLyricsMode ? (
-                <StaticLyricsContent text={staticLyricsText} isMobile />
+                  <StaticLyricsContent text={staticLyricsText} isMobile increaseContrast={increaseContrast} />
               ) : (
                 amllLines.length > 0 ? (
                   <AMLLLyricsPlayer
@@ -1718,7 +1718,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                     
                     onLineClick={amllSeek}
                     isMobile
-                    className="h-full w-full"
+                    className={cn("h-full w-full", increaseContrast && "amll-lyrics-contrast")}
                   />
                 ) : (
                   <LyricsContent {...lyricsContentProps} isMobile />
