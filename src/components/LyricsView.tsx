@@ -462,7 +462,7 @@ function KaraokeWordSpan({
 }
 
 // ─── eLRC line ───
-function ELRCLine({ words, currentTime, isMobile, frozen, charLimit }: { words: { word: string; startTime: number; endTime: number }[]; currentTime: number; isMobile: boolean; frozen?: boolean; charLimit?: number }) {
+function ELRCLine({ words, currentTime, isMobile, frozen, charLimit, increaseContrast = false }: { words: { word: string; startTime: number; endTime: number }[]; currentTime: number; isMobile: boolean; frozen?: boolean; charLimit?: number; increaseContrast?: boolean }) {
   const breakIndices = useMemo(() => isMobile ? getMobileBreakIndices(words, charLimit) : new Set<number>(), [words, isMobile, charLimit]);
   return (
     <span dir="auto" className="font-semibold inline-block" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif", fontSize: isMobile ? '2.2rem' : '48px', fontWeight: 600, unicodeBidi: "plaintext", lineHeight: 1.4, overflow: 'visible' }}>
@@ -476,6 +476,7 @@ function ELRCLine({ words, currentTime, isMobile, frozen, charLimit }: { words: 
             nextWordStart={words[idx + 1]?.startTime}
             frozen={frozen}
             emphasisDuration={Math.max(0, w.endTime - w.startTime)}
+            increaseContrast={increaseContrast}
           />
           {idx < words.length - 1 ? (breakIndices.has(idx) ? <br /> : " ") : null}
         </Fragment>
@@ -485,8 +486,8 @@ function ELRCLine({ words, currentTime, isMobile, frozen, charLimit }: { words: 
 }
 
 // ─── Karaoke line (renders for BOTH active and recently-passed lines) ───
-function KaraokeLine({ text, words, lineIndex, lineStartTime, lineEndTime, currentTime, isCurrentLine, isMobile, charLimit }: {
-  text: string; words: KaraokeWord[]; lineIndex: number; lineStartTime: number; lineEndTime: number; currentTime: number; isCurrentLine: boolean; isMobile: boolean; charLimit?: number;
+function KaraokeLine({ text, words, lineIndex, lineStartTime, lineEndTime, currentTime, isCurrentLine, isMobile, charLimit, increaseContrast = false }: {
+  text: string; words: KaraokeWord[]; lineIndex: number; lineStartTime: number; lineEndTime: number; currentTime: number; isCurrentLine: boolean; isMobile: boolean; charLimit?: number; increaseContrast?: boolean;
 }) {
   const hasLineIndex = useMemo(() => words.some((w) => typeof w.lineIndex === "number"), [words]);
 
@@ -551,6 +552,7 @@ function KaraokeLine({ text, words, lineIndex, lineStartTime, lineEndTime, curre
               nextWordStart={visualLineWords[idx + 1]?.visualStart}
               frozen={frozen}
               emphasisDuration={wordData.emphasisDuration}
+              increaseContrast={increaseContrast}
             />
             {idx < visualLineWords.length - 1 ? (mobileBreaks.has(idx) ? <br /> : " ") : null}
           </Fragment>
@@ -561,7 +563,7 @@ function KaraokeLine({ text, words, lineIndex, lineStartTime, lineEndTime, curre
 
   // Inactive: use same getMobileBreakIndices logic as active for consistency
   return (
-    <span className="font-semibold inline-block" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif", fontSize: isMobile ? '2.2rem' : '48px', fontWeight: 600, color: "rgba(255, 255, 255, 0.35)", unicodeBidi: "plaintext", lineHeight: 1.4 }}>
+    <span className="font-semibold inline-block" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif", fontSize: isMobile ? '2.2rem' : '48px', fontWeight: 600, color: increaseContrast ? "#ffffff" : "rgba(255, 255, 255, 0.35)", unicodeBidi: "plaintext", lineHeight: 1.4 }}>
       {isMobile ? textWords.map((word, i) => (
         <Fragment key={i}>{word}{i < textWords.length - 1 ? (mobileBreaks.has(i) ? <br /> : " ") : null}</Fragment>
       )) : text}
