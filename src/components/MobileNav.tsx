@@ -1,6 +1,5 @@
 import { Home, Library, ListMusic, Search, Settings, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 
 interface MobileNavProps {
@@ -36,13 +35,12 @@ export function MobileNav({ activeView, onViewChange }: MobileNavProps) {
                   isActive ? "text-white" : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                {isActive && (
-                  <motion.span
-                    layoutId="mobile-nav-pill"
-                    className="absolute inset-0 rounded-xl bg-gradient-brand shadow-glow"
-                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                  />
-                )}
+                <span
+                  className={cn(
+                    "absolute inset-0 rounded-xl bg-gradient-brand shadow-glow transition-opacity duration-150",
+                    isActive ? "opacity-100" : "opacity-0"
+                  )}
+                />
                 <span className="relative z-10 flex flex-col items-center gap-0.5">
                   <item.icon className={cn("h-5 w-5 transition-transform", isActive && "scale-110")} />
                   <span className={cn("text-[10px] font-semibold tracking-wide", !isActive && "opacity-80")}>
