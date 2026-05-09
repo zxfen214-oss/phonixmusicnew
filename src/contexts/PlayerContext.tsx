@@ -545,6 +545,28 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     });
   }, [loadYouTubeVideo, loadLocalAudio, loadCachedOrRemoteAudio]);
 
+  // Wire up advanceToTrackRef so audio.onended (in cached/local loaders) can
+  // actually load the next track's audio source even when the app is in the
+  // background. Without this, only the React state changed but no audio
+  // element/youtube player was re-instantiated for the new track.
+  useEffect(() => {
+    advanceToTrackRef.current = (track: Track) => {
+      const myToken = ++loadTokenRef.current;
+      stopCurrentSource();
+      if (track.source === 'youtube' && track.youtubeId) {
+        loadCachedOrRemoteAudio(track, myToken).then(usedCached => {
+          if (myToken !== loadTokenRef.current) return;
+          if (!usedCached) loadYouTubeVideo(track.youtubeId!);
+        });
+      } else {
+        loadCachedOrRemoteAudio(track, myToken).then(usedCached => {
+          if (myToken !== loadTokenRef.current) return;
+          if (!usedCached) loadLocalAudio(track);
+        });
+      }
+    };
+  }, [loadCachedOrRemoteAudio, loadYouTubeVideo, loadLocalAudio, stopCurrentSource]);
+
   const seekTo = useCallback((progress: number) => {
     
     if (!state.currentTrack) return;
