@@ -161,6 +161,18 @@
   --shadow-lift: 0 4px 12px -4px hsl(0 0% 0% / 0.55), 0 16px 48px -12px hsl(0 0% 0% / 0.7);
 }
 
+.increase-contrast {
+  --background: 0 0% 0%;
+  --card: 0 0% 4%;
+  --secondary: 0 0% 10%;
+  --accent: 353 82% 63%;
+  --ring: 353 82% 63%;
+  --brand-1: 353 82% 63%;
+  --brand-2: 353 82% 63%;
+  --brand-3: 353 82% 63%;
+  --glass-bg: 0 0% 4% / 0.82;
+}
+
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -370,6 +382,21 @@
   background-clip: text;
   color: transparent;
   animation: gradient-x 8s ease infinite;
+}
+
+.increase-contrast .text-gradient-animated {
+  animation: none;
+  background: hsl(var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.increase-contrast .brand-blob,
+.increase-contrast .mesh-background,
+.increase-contrast .animate-pulse-glow,
+.increase-contrast .animate-float {
+  animation: none !important;
+  opacity: 0 !important;
 }
 
 /* Equalizer bars (now-playing indicator) */
