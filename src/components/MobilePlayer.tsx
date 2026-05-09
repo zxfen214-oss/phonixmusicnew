@@ -9,6 +9,7 @@ import iconPause from "@/assets/icon-pause.png";
 import iconNext from "@/assets/icon-next.png";
 import iconPrev from "@/assets/icon-prev.png";
 import lyricsIcon from "@/assets/lyrics-icon.png";
+import contrastLyricsIcon from "@/assets/lyrics-icon-contrast.png";
 import LyricsBackground from "@/components/LyricsBackground";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -257,7 +258,7 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
                 title={hasLyrics ? "Lyrics" : "No lyrics available"}
               >
                 <img
-                  src={increaseContrast ? "/src/assets/lyrics-icon-contrast.png" : lyricsIcon}
+                  src={increaseContrast ? contrastLyricsIcon : lyricsIcon}
                   alt="Lyrics"
                   className="w-[22px] h-[22px] object-contain"
                   style={{
