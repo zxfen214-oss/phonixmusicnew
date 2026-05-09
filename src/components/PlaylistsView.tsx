@@ -2,11 +2,26 @@ import { useState } from "react";
 import { useLibrary } from "@/contexts/LibraryContext";
 import { PlaylistCard } from "./PlaylistCard";
 import { CreatePlaylistDialog } from "./CreatePlaylistDialog";
+import { PlaylistDetailView } from "./PlaylistDetailView";
 import { Plus, ListMusic } from "lucide-react";
 
 export function PlaylistsView() {
   const { playlists } = useLibrary();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
+
+  const selectedPlaylist = selectedPlaylistId
+    ? playlists.find((p) => p.id === selectedPlaylistId) ?? null
+    : null;
+
+  if (selectedPlaylist) {
+    return (
+      <PlaylistDetailView
+        playlist={selectedPlaylist}
+        onBack={() => setSelectedPlaylistId(null)}
+      />
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
@@ -49,7 +64,11 @@ export function PlaylistsView() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
             {playlists.map((playlist) => (
-              <PlaylistCard key={playlist.id} playlist={playlist} />
+              <PlaylistCard
+                key={playlist.id}
+                playlist={playlist}
+                onOpen={() => setSelectedPlaylistId(playlist.id)}
+              />
             ))}
           </div>
         )}
