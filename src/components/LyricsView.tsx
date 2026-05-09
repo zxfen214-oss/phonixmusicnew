@@ -22,6 +22,7 @@ import iconPause from "@/assets/icon-pause.png";
 import iconNext from "@/assets/icon-next.png";
 import iconPrev from "@/assets/icon-prev.png";
 import lyricsIcon from "@/assets/lyrics-icon.png";
+import contrastLyricsIcon from "@/assets/lyrics-icon-contrast.png";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,6 +32,7 @@ import AMLLLyricsPlayer from "@/components/AMLLLyricsPlayer";
 import LyricsBackground from "@/components/LyricsBackground";
 import { parseLrc as parseLrcAmll, applyManualKaraoke } from "@/lib/parseLrc";
 import { LosslessBadge } from "@/components/LosslessBadge";
+import { useTheme } from "@/contexts/ThemeContext";
 
 import React from "react";
 
@@ -327,6 +329,7 @@ function KaraokeWordSpan({
   currentTime,
   frozen,
   isEm,
+  increaseContrast = false,
 }: {
   word: string;
   startTime: number;
@@ -336,6 +339,7 @@ function KaraokeWordSpan({
   frozen?: boolean;
   emphasisDuration?: number;
   isEm?: boolean;
+  increaseContrast?: boolean;
 }) {
   const safeDuration = Math.max(endTime - startTime, 0.12);
   let rawProgress = 0;
@@ -434,7 +438,7 @@ function KaraokeWordSpan({
       }}
     >
       {/* Base text (no per-char animation — stable, no wobble) */}
-      <span style={{ whiteSpace: 'pre', color: `rgba(255, 255, 255, ${frozen ? 0.15 : 0.35})` }}>
+      <span style={{ whiteSpace: 'pre', color: increaseContrast ? '#ffffff' : `rgba(255, 255, 255, ${frozen ? 0.15 : 0.35})` }}>
         {word}
       </span>
       {/* Fill overlay with soft gradient edge */}
@@ -451,7 +455,7 @@ function KaraokeWordSpan({
           WebkitMaskImage: isDone ? 'none' : 'linear-gradient(to right, white 0%, white calc(100% - 20px), rgba(255,255,255,0.4) calc(100% - 8px), transparent 100%)',
         }}
       >
-        <span style={{ whiteSpace: 'pre', color: '#ffffff' }}>{word}</span>
+        <span style={{ whiteSpace: 'pre', color: increaseContrast ? '#ee5365' : '#ffffff' }}>{word}</span>
       </span>
     </span>
   );
