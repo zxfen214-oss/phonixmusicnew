@@ -995,6 +995,7 @@ function StaticLyricsContent({ text, isMobile }: { text: string; isMobile: boole
 // ═══════════════════════════════════════════════════
 export function LyricsView({ onClose }: LyricsViewProps) {
   const { currentTrack, isPlaying, progress, playbackRate, volume, isLossless, audioFormat, pauseTrack, resumeTrack, nextTrack, previousTrack, seekTo, setVolume, repeat, toggleRepeat } = usePlayer();
+  const { increaseContrast } = useTheme();
   const isMobile = useIsMobile();
 
   const [parsedLyrics, setParsedLyrics] = useState<ParsedLyrics | null>(null);
@@ -1443,6 +1444,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
     isLoadingLyrics,
     defaultAlignment: parsedLyrics?.defaultAlignment,
     mobileCharLimit,
+    increaseContrast,
   };
 
   return (
@@ -1454,7 +1456,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
         className="fixed inset-0 z-50 overflow-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
       >
         <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }}>
-          <LyricsBackground albumSrc={currentTrack.artwork} flowSpeed={2} />
+          {!increaseContrast && <LyricsBackground albumSrc={currentTrack.artwork} flowSpeed={2} className="mesh-background" />}
         </div>
 
         <div className="relative h-full hidden md:flex items-center z-10">
@@ -1564,14 +1566,14 @@ export function LyricsView({ onClose }: LyricsViewProps) {
 
               <div className="flex items-center justify-center gap-4 mt-4" style={{ width: showLyricsPanel ? '360px' : '400px' }}>
                 <button className="p-2 rounded-full hover:bg-white/10 transition-colors">
-                  <Heart className="h-5 w-5 text-white/60" />
+                  <Heart className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/60")} />
                 </button>
                 <button
                   onClick={() => currentTrack && setShowPlaylistDialog(true)}
                   className="p-2 rounded-full hover:bg-white/10 transition-colors"
                   title="Add to playlist"
                 >
-                  <ListPlus className="h-5 w-5 text-white/60" />
+                  <ListPlus className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/60")} />
                 </button>
                 <button
                   onClick={toggleRepeat}
@@ -1579,11 +1581,11 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                   title="Loop"
                 >
                   {repeat === 'one' ? (
-                    <Repeat1 className="h-5 w-5 text-white" />
+                    <Repeat1 className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white")} />
                   ) : repeat === 'all' ? (
-                    <Repeat className="h-5 w-5 text-white" />
+                    <Repeat className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white")} />
                   ) : (
-                    <Repeat className="h-5 w-5 text-white/60" />
+                    <Repeat className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/60")} />
                   )}
                 </button>
                 <button
@@ -1596,10 +1598,10 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                   title={!hasAnyLyrics ? "No lyrics available" : showLyricsPanel ? "Hide Lyrics" : "Show Lyrics"}
                 >
                   <img
-                    src={lyricsIcon}
+                    src={increaseContrast ? contrastLyricsIcon : lyricsIcon}
                     alt="Lyrics"
-                    className="h-5 w-5 brightness-0 invert"
-                    style={{ opacity: !hasAnyLyrics ? 0.25 : showLyricsPanel ? 1 : 0.5 }}
+                    className={cn("h-5 w-5", !increaseContrast && "brightness-0 invert")}
+                    style={{ opacity: !hasAnyLyrics ? 0.25 : showLyricsPanel ? 1 : 0.65 }}
                   />
                 </button>
               </div>
