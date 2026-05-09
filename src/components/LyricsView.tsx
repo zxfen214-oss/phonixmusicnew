@@ -22,6 +22,7 @@ import iconPause from "@/assets/icon-pause.png";
 import iconNext from "@/assets/icon-next.png";
 import iconPrev from "@/assets/icon-prev.png";
 import lyricsIcon from "@/assets/lyrics-icon.png";
+import contrastLyricsIcon from "@/assets/lyrics-icon-contrast.png";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,6 +32,7 @@ import AMLLLyricsPlayer from "@/components/AMLLLyricsPlayer";
 import LyricsBackground from "@/components/LyricsBackground";
 import { parseLrc as parseLrcAmll, applyManualKaraoke } from "@/lib/parseLrc";
 import { LosslessBadge } from "@/components/LosslessBadge";
+import { useTheme } from "@/contexts/ThemeContext";
 
 import React from "react";
 
@@ -327,6 +329,7 @@ function KaraokeWordSpan({
   currentTime,
   frozen,
   isEm,
+  increaseContrast = false,
 }: {
   word: string;
   startTime: number;
@@ -336,6 +339,7 @@ function KaraokeWordSpan({
   frozen?: boolean;
   emphasisDuration?: number;
   isEm?: boolean;
+  increaseContrast?: boolean;
 }) {
   const safeDuration = Math.max(endTime - startTime, 0.12);
   let rawProgress = 0;
@@ -434,7 +438,7 @@ function KaraokeWordSpan({
       }}
     >
       {/* Base text (no per-char animation — stable, no wobble) */}
-      <span style={{ whiteSpace: 'pre', color: `rgba(255, 255, 255, ${frozen ? 0.15 : 0.35})` }}>
+      <span style={{ whiteSpace: 'pre', color: increaseContrast ? '#ffffff' : `rgba(255, 255, 255, ${frozen ? 0.15 : 0.35})` }}>
         {word}
       </span>
       {/* Fill overlay with soft gradient edge */}
@@ -451,14 +455,14 @@ function KaraokeWordSpan({
           WebkitMaskImage: isDone ? 'none' : 'linear-gradient(to right, white 0%, white calc(100% - 20px), rgba(255,255,255,0.4) calc(100% - 8px), transparent 100%)',
         }}
       >
-        <span style={{ whiteSpace: 'pre', color: '#ffffff' }}>{word}</span>
+        <span style={{ whiteSpace: 'pre', color: increaseContrast ? '#ee5365' : '#ffffff' }}>{word}</span>
       </span>
     </span>
   );
 }
 
 // ─── eLRC line ───
-function ELRCLine({ words, currentTime, isMobile, frozen, charLimit }: { words: { word: string; startTime: number; endTime: number }[]; currentTime: number; isMobile: boolean; frozen?: boolean; charLimit?: number }) {
+function ELRCLine({ words, currentTime, isMobile, frozen, charLimit, increaseContrast = false }: { words: { word: string; startTime: number; endTime: number }[]; currentTime: number; isMobile: boolean; frozen?: boolean; charLimit?: number; increaseContrast?: boolean }) {
   const breakIndices = useMemo(() => isMobile ? getMobileBreakIndices(words, charLimit) : new Set<number>(), [words, isMobile, charLimit]);
   return (
     <span dir="auto" className="font-semibold inline-block" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif", fontSize: isMobile ? '2.2rem' : '48px', fontWeight: 600, unicodeBidi: "plaintext", lineHeight: 1.4, overflow: 'visible' }}>
@@ -472,6 +476,7 @@ function ELRCLine({ words, currentTime, isMobile, frozen, charLimit }: { words: 
             nextWordStart={words[idx + 1]?.startTime}
             frozen={frozen}
             emphasisDuration={Math.max(0, w.endTime - w.startTime)}
+            increaseContrast={increaseContrast}
           />
           {idx < words.length - 1 ? (breakIndices.has(idx) ? <br /> : " ") : null}
         </Fragment>
@@ -481,8 +486,8 @@ function ELRCLine({ words, currentTime, isMobile, frozen, charLimit }: { words: 
 }
 
 // ─── Karaoke line (renders for BOTH active and recently-passed lines) ───
-function KaraokeLine({ text, words, lineIndex, lineStartTime, lineEndTime, currentTime, isCurrentLine, isMobile, charLimit }: {
-  text: string; words: KaraokeWord[]; lineIndex: number; lineStartTime: number; lineEndTime: number; currentTime: number; isCurrentLine: boolean; isMobile: boolean; charLimit?: number;
+function KaraokeLine({ text, words, lineIndex, lineStartTime, lineEndTime, currentTime, isCurrentLine, isMobile, charLimit, increaseContrast = false }: {
+  text: string; words: KaraokeWord[]; lineIndex: number; lineStartTime: number; lineEndTime: number; currentTime: number; isCurrentLine: boolean; isMobile: boolean; charLimit?: number; increaseContrast?: boolean;
 }) {
   const hasLineIndex = useMemo(() => words.some((w) => typeof w.lineIndex === "number"), [words]);
 
@@ -547,6 +552,7 @@ function KaraokeLine({ text, words, lineIndex, lineStartTime, lineEndTime, curre
               nextWordStart={visualLineWords[idx + 1]?.visualStart}
               frozen={frozen}
               emphasisDuration={wordData.emphasisDuration}
+              increaseContrast={increaseContrast}
             />
             {idx < visualLineWords.length - 1 ? (mobileBreaks.has(idx) ? <br /> : " ") : null}
           </Fragment>
@@ -557,7 +563,7 @@ function KaraokeLine({ text, words, lineIndex, lineStartTime, lineEndTime, curre
 
   // Inactive: use same getMobileBreakIndices logic as active for consistency
   return (
-    <span className="font-semibold inline-block" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif", fontSize: isMobile ? '2.2rem' : '48px', fontWeight: 600, color: "rgba(255, 255, 255, 0.35)", unicodeBidi: "plaintext", lineHeight: 1.4 }}>
+    <span className="font-semibold inline-block" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif", fontSize: isMobile ? '2.2rem' : '48px', fontWeight: 600, color: increaseContrast ? "#ffffff" : "rgba(255, 255, 255, 0.35)", unicodeBidi: "plaintext", lineHeight: 1.4 }}>
       {isMobile ? textWords.map((word, i) => (
         <Fragment key={i}>{word}{i < textWords.length - 1 ? (mobileBreaks.has(i) ? <br /> : " ") : null}</Fragment>
       )) : text}
@@ -574,7 +580,8 @@ const MemoKaraokeLine = React.memo(KaraokeLine, (prev, next) => {
     prev.lineEndTime !== next.lineEndTime ||
     prev.isCurrentLine !== next.isCurrentLine ||
     prev.isMobile !== next.isMobile ||
-    prev.charLimit !== next.charLimit
+    prev.charLimit !== next.charLimit ||
+    prev.increaseContrast !== next.increaseContrast
   ) {
     return false;
   }
@@ -783,7 +790,7 @@ function useAppleMusicStyles(
 
 // ─── Bracket sub-line: smoothly opens space (pushing upcoming lines down)
 // before fading text in; collapses space only after the main line moves on.
-function SecondaryTextLine({ text, isActive, isMobile }: { text: string; isActive: boolean; isMobile: boolean }) {
+function SecondaryTextLine({ text, isActive, isMobile, increaseContrast = false }: { text: string; isActive: boolean; isMobile: boolean; increaseContrast?: boolean }) {
   const [spaceOpen, setSpaceOpen] = useState(false);
   const [textVisible, setTextVisible] = useState(false);
 
@@ -818,7 +825,7 @@ function SecondaryTextLine({ text, isActive, isMobile }: { text: string; isActiv
           style={{
             fontSize: isMobile ? '18px' : '22px',
             fontWeight: 500,
-            color: isActive ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.2)',
+            color: increaseContrast ? '#ffffff' : isActive ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.2)',
             unicodeBidi: 'plaintext',
             lineHeight: 1.0,
             margin: 0,
@@ -835,9 +842,9 @@ function SecondaryTextLine({ text, isActive, isMobile }: { text: string; isActiv
 
 // ─── Lyrics content (shared between desktop & mobile) ───
 function LyricsContent({
-  visibleLyrics, karaokeEnabled, karaokeWords, smoothTime, lyricsSpeed, bounceIntensity, isLoadingLyrics, isMobile, defaultAlignment, mobileCharLimit,
+  visibleLyrics, karaokeEnabled, karaokeWords, smoothTime, lyricsSpeed, bounceIntensity, isLoadingLyrics, isMobile, defaultAlignment, mobileCharLimit, increaseContrast = false,
 }: {
-  visibleLyrics: VisibleLyricItem[]; karaokeEnabled: boolean; karaokeWords: KaraokeWord[]; smoothTime: number; lyricsSpeed: number; bounceIntensity: number; isLoadingLyrics: boolean; isMobile: boolean; defaultAlignment?: 'left' | 'right'; mobileCharLimit?: number;
+  visibleLyrics: VisibleLyricItem[]; karaokeEnabled: boolean; karaokeWords: KaraokeWord[]; smoothTime: number; lyricsSpeed: number; bounceIntensity: number; isLoadingLyrics: boolean; isMobile: boolean; defaultAlignment?: 'left' | 'right'; mobileCharLimit?: number; increaseContrast?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -887,10 +894,10 @@ function LyricsContent({
               <MusicIndicator currentTime={smoothTime} startTime={lineTime} endTime={musicEnd} />
             ) : !isIntro && elrcWords && elrcWords.length > 0 ? (
               <>
-                <ELRCLine words={elrcWords} currentTime={smoothTime} isMobile={isMobile} frozen={!isActive && smoothTime >= nextLineTime} charLimit={mobileCharLimit} />
+                <ELRCLine words={elrcWords} currentTime={smoothTime} isMobile={isMobile} frozen={!isActive && smoothTime >= nextLineTime} charLimit={mobileCharLimit} increaseContrast={increaseContrast} />
                 {nlCompanionText && nlCompanionElrcWords && nlCompanionElrcWords.length > 0 ? (
                   <div style={{ marginTop: '12px', opacity: companionOpacity, transition: 'opacity 250ms ease-out' }}>
-                    <ELRCLine words={nlCompanionElrcWords} currentTime={smoothTime} isMobile={isMobile} frozen={!isActive && smoothTime >= nextLineTime} charLimit={mobileCharLimit} />
+                    <ELRCLine words={nlCompanionElrcWords} currentTime={smoothTime} isMobile={isMobile} frozen={!isActive && smoothTime >= nextLineTime} charLimit={mobileCharLimit} increaseContrast={increaseContrast} />
                   </div>
                 ) : nlCompanionText && (
                   <p dir="auto" style={{ fontSize, fontWeight: 700, color: 'rgba(255,255,255,1)', unicodeBidi: "plaintext", lineHeight: 1.4, marginTop: '12px', margin: 0 }}>
@@ -900,15 +907,15 @@ function LyricsContent({
                   </p>
                 )}
                 {secondaryText && (
-                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} />
+                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} increaseContrast={increaseContrast} />
                 )}
               </>
             ) : !isIntro && karaokeEnabled ? (
               <>
-                <MemoKaraokeLine text={text} words={karaokeWords} lineIndex={index} lineStartTime={lineTime} lineEndTime={nextLineTime} currentTime={smoothTime} isCurrentLine={isActive} isMobile={isMobile} charLimit={mobileCharLimit} />
+                <MemoKaraokeLine text={text} words={karaokeWords} lineIndex={index} lineStartTime={lineTime} lineEndTime={nextLineTime} currentTime={smoothTime} isCurrentLine={isActive} isMobile={isMobile} charLimit={mobileCharLimit} increaseContrast={increaseContrast} />
                 {nlCompanionText && nlCompanionTime != null && nlCompanionEndTime != null ? (
                   <div style={{ marginTop: '12px', opacity: companionOpacity, transition: 'opacity 250ms ease-out' }}>
-                    <MemoKaraokeLine text={nlCompanionText} words={karaokeWords} lineIndex={index + 1} lineStartTime={nlCompanionTime} lineEndTime={nlCompanionEndTime} currentTime={smoothTime} isCurrentLine={isActive} isMobile={isMobile} charLimit={mobileCharLimit} />
+                    <MemoKaraokeLine text={nlCompanionText} words={karaokeWords} lineIndex={index + 1} lineStartTime={nlCompanionTime} lineEndTime={nlCompanionEndTime} currentTime={smoothTime} isCurrentLine={isActive} isMobile={isMobile} charLimit={mobileCharLimit} increaseContrast={increaseContrast} />
                   </div>
                 ) : nlCompanionText && (
                   <p dir="auto" style={{ fontSize, fontWeight: 700, color: 'rgba(255,255,255,1)', unicodeBidi: "plaintext", lineHeight: 1.4, marginTop: '12px', margin: 0 }}>
@@ -918,7 +925,7 @@ function LyricsContent({
                   </p>
                 )}
                 {secondaryText && (
-                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} />
+                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} increaseContrast={increaseContrast} />
                 )}
               </>
             ) : isIntro ? (
@@ -931,7 +938,7 @@ function LyricsContent({
                     fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
                     fontSize,
                     fontWeight: isActive ? 700 : 600,
-                    color: isActive ? "#ffffff" : "rgba(255, 255, 255, 0.35)",
+                    color: increaseContrast ? "#ffffff" : isActive ? "#ffffff" : "rgba(255, 255, 255, 0.35)",
                     unicodeBidi: "plaintext",
                     lineHeight: 1.4,
                     margin: 0,
@@ -942,14 +949,14 @@ function LyricsContent({
                   )) : text}
                 </p>
                 {nlCompanionText && (
-                  <p dir="auto" style={{ fontSize, fontWeight: isActive ? 700 : 600, color: "rgba(255,255,255,0.35)", unicodeBidi: "plaintext", lineHeight: 1.4, marginTop: '12px', margin: 0 }}>
+                  <p dir="auto" style={{ fontSize, fontWeight: isActive ? 700 : 600, color: increaseContrast ? "#ffffff" : "rgba(255,255,255,0.35)", unicodeBidi: "plaintext", lineHeight: 1.4, marginTop: '12px', margin: 0 }}>
                     {isMobile ? splitTextForMobile(nlCompanionText, mobileCharLimit).map((line, i, arr) => (
                       <Fragment key={i}>{line}{i < arr.length - 1 ? <br /> : null}</Fragment>
                     )) : nlCompanionText}
                   </p>
                 )}
                 {secondaryText && (
-                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} />
+                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} increaseContrast={increaseContrast} />
                 )}
               </>
             )}
@@ -961,7 +968,7 @@ function LyricsContent({
 }
 
 // ─── Static Lyrics (scrollable plain text, 15px paragraphs) ───
-function StaticLyricsContent({ text, isMobile }: { text: string; isMobile: boolean }) {
+function StaticLyricsContent({ text, isMobile, increaseContrast = false }: { text: string; isMobile: boolean; increaseContrast?: boolean }) {
   const hasText = text.trim().length > 0;
   return (
     <div className="relative w-full h-full overflow-y-auto" style={{ padding: isMobile ? '20px' : '20px 0' }}>
@@ -970,7 +977,7 @@ function StaticLyricsContent({ text, isMobile }: { text: string; isMobile: boole
           <p className="text-white/40" style={{ fontSize: '14px' }}>No static lyrics available for this track.</p>
         </div>
       ) : (
-        <div style={{ fontSize: '15px', lineHeight: 1.8, color: 'rgba(255,255,255,0.75)', fontWeight: 400 }}>
+        <div style={{ fontSize: '15px', lineHeight: 1.8, color: increaseContrast ? '#ffffff' : 'rgba(255,255,255,0.75)', fontWeight: 400 }}>
           {text.split('\n\n').length > 1
             ? text.split('\n\n').map((paragraph, i) => (
                 <p key={i} style={{ marginBottom: '16px', whiteSpace: 'pre-wrap' }}>{paragraph}</p>
@@ -988,6 +995,7 @@ function StaticLyricsContent({ text, isMobile }: { text: string; isMobile: boole
 // ═══════════════════════════════════════════════════
 export function LyricsView({ onClose }: LyricsViewProps) {
   const { currentTrack, isPlaying, progress, playbackRate, volume, isLossless, audioFormat, pauseTrack, resumeTrack, nextTrack, previousTrack, seekTo, setVolume, repeat, toggleRepeat } = usePlayer();
+  const { increaseContrast } = useTheme();
   const isMobile = useIsMobile();
 
   const [parsedLyrics, setParsedLyrics] = useState<ParsedLyrics | null>(null);
@@ -1436,6 +1444,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
     isLoadingLyrics,
     defaultAlignment: parsedLyrics?.defaultAlignment,
     mobileCharLimit,
+    increaseContrast,
   };
 
   return (
@@ -1447,7 +1456,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
         className="fixed inset-0 z-50 overflow-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
       >
         <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }}>
-          <LyricsBackground albumSrc={currentTrack.artwork} flowSpeed={2} />
+          {!increaseContrast && <LyricsBackground albumSrc={currentTrack.artwork} flowSpeed={2} className="mesh-background" />}
         </div>
 
         <div className="relative h-full hidden md:flex items-center z-10">
@@ -1557,14 +1566,14 @@ export function LyricsView({ onClose }: LyricsViewProps) {
 
               <div className="flex items-center justify-center gap-4 mt-4" style={{ width: showLyricsPanel ? '360px' : '400px' }}>
                 <button className="p-2 rounded-full hover:bg-white/10 transition-colors">
-                  <Heart className="h-5 w-5 text-white/60" />
+                  <Heart className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/60")} />
                 </button>
                 <button
                   onClick={() => currentTrack && setShowPlaylistDialog(true)}
                   className="p-2 rounded-full hover:bg-white/10 transition-colors"
                   title="Add to playlist"
                 >
-                  <ListPlus className="h-5 w-5 text-white/60" />
+                  <ListPlus className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/60")} />
                 </button>
                 <button
                   onClick={toggleRepeat}
@@ -1572,11 +1581,11 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                   title="Loop"
                 >
                   {repeat === 'one' ? (
-                    <Repeat1 className="h-5 w-5 text-white" />
+                    <Repeat1 className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white")} />
                   ) : repeat === 'all' ? (
-                    <Repeat className="h-5 w-5 text-white" />
+                    <Repeat className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white")} />
                   ) : (
-                    <Repeat className="h-5 w-5 text-white/60" />
+                    <Repeat className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/60")} />
                   )}
                 </button>
                 <button
@@ -1589,10 +1598,10 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                   title={!hasAnyLyrics ? "No lyrics available" : showLyricsPanel ? "Hide Lyrics" : "Show Lyrics"}
                 >
                   <img
-                    src={lyricsIcon}
+                    src={increaseContrast ? contrastLyricsIcon : lyricsIcon}
                     alt="Lyrics"
-                    className="h-5 w-5 brightness-0 invert"
-                    style={{ opacity: !hasAnyLyrics ? 0.25 : showLyricsPanel ? 1 : 0.5 }}
+                    className={cn("h-5 w-5", !increaseContrast && "brightness-0 invert")}
+                    style={{ opacity: !hasAnyLyrics ? 0.25 : showLyricsPanel ? 1 : 0.65 }}
                   />
                 </button>
               </div>
@@ -1623,7 +1632,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                   </div>
                   <div ref={lyricsContainerRef} className="relative min-h-0 flex-1">
                     {staticLyricsMode ? (
-                      <StaticLyricsContent text={staticLyricsText} isMobile={false} />
+                      <StaticLyricsContent text={staticLyricsText} isMobile={false} increaseContrast={increaseContrast} />
                     ) : (
                       amllLines.length > 0 ? (
                         <AMLLLyricsPlayer
@@ -1633,7 +1642,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                           fontSize={45}
                           enableBlur={false}
                           onLineClick={amllSeek}
-                          className="h-full w-full"
+                          className={cn("h-full w-full", increaseContrast && "amll-lyrics-contrast")}
                         />
                       ) : (
                         <LyricsContent {...lyricsContentProps} isMobile={false} />
@@ -1697,7 +1706,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
               style={{ overflow: staticLyricsMode ? 'auto' : 'hidden' }}
             >
               {staticLyricsMode ? (
-                <StaticLyricsContent text={staticLyricsText} isMobile />
+                  <StaticLyricsContent text={staticLyricsText} isMobile increaseContrast={increaseContrast} />
               ) : (
                 amllLines.length > 0 ? (
                   <AMLLLyricsPlayer
@@ -1709,7 +1718,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                     
                     onLineClick={amllSeek}
                     isMobile
-                    className="h-full w-full"
+                    className={cn("h-full w-full", increaseContrast && "amll-lyrics-contrast")}
                   />
                 ) : (
                   <LyricsContent {...lyricsContentProps} isMobile />
@@ -1783,11 +1792,11 @@ export function LyricsView({ onClose }: LyricsViewProps) {
             <div className="flex items-center justify-center gap-6 mt-3">
               <button onClick={(e) => { e.stopPropagation(); toggleRepeat(); resetMobileControlsTimer(); }} className="p-2 rounded-full hover:bg-white/10 transition-colors">
                 {repeat === 'one' ? (
-                  <Repeat1 className="h-5 w-5 text-white" />
+                  <Repeat1 className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white")} />
                 ) : repeat === 'all' ? (
-                  <Repeat className="h-5 w-5 text-white" />
+                  <Repeat className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white")} />
                 ) : (
-                  <Repeat className="h-5 w-5 text-white/40" />
+                  <Repeat className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/40")} />
                 )}
               </button>
               <button onClick={(e) => { e.stopPropagation(); previousTrack(); resetMobileControlsTimer(); }} className="p-3 rounded-full hover:bg-white/10 transition-colors">
@@ -1805,7 +1814,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
                 <img src={iconNext} alt="Next" className="h-6 w-6 brightness-0 invert" />
               </button>
               <button onClick={(e) => { e.stopPropagation(); currentTrack && setShowPlaylistDialog(true); resetMobileControlsTimer(); }} className="p-2 rounded-full hover:bg-white/10 transition-colors">
-                <ListPlus className="h-5 w-5 text-white/60" />
+                <ListPlus className={cn("h-5 w-5", increaseContrast ? "text-accent" : "text-white/60")} />
               </button>
             </div>
 

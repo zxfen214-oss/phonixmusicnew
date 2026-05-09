@@ -61,7 +61,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
 
   if (!currentTrack) {
     return (
-      <div className="h-16 md:h-24 mx-3 md:mx-0 mb-[calc(5rem+env(safe-area-inset-bottom))] md:mb-0 rounded-2xl md:rounded-none md:border-t md:border-border/60 glass-strong flex items-center justify-center shadow-lift md:shadow-none">
+      <div className="h-16 md:h-24 mx-3 md:mx-0 mb-[calc(5rem+env(safe-area-inset-bottom))] md:mb-0 rounded-2xl md:rounded-none md:border-t md:border-border/60 glass-strong flex items-center justify-center shadow-lift md:shadow-none overflow-visible">
         <p className="text-muted-foreground text-sm">No track playing</p>
       </div>
     );
@@ -70,7 +70,8 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
   const currentTime = (progress / 100) * currentTrack.duration;
 
   return (
-    <div className="h-20 md:h-24 mx-3 md:mx-0 mb-[calc(5rem+env(safe-area-inset-bottom))] md:mb-0 rounded-2xl md:rounded-none md:border-t md:border-border/60 glass-strong px-3 md:px-4 flex items-center gap-2 md:gap-4 shadow-lift md:shadow-none overflow-hidden">
+    <div className="relative h-20 md:h-24 mx-3 md:mx-0 mb-[calc(5rem+env(safe-area-inset-bottom))] md:mb-0 rounded-2xl md:rounded-none md:border-t md:border-border/60 glass-strong px-3 md:px-4 flex items-center gap-2 md:gap-4 shadow-lift md:shadow-none overflow-visible">
+      <div className="absolute inset-0 rounded-2xl md:rounded-none overflow-hidden pointer-events-none" />
       {/* Track Info */}
       <div className="flex items-center gap-2 md:gap-3 flex-1 md:w-64 md:flex-initial min-w-0">
         <div 
@@ -206,7 +207,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
       {/* Desktop Controls - Full */}
       <div className="hidden md:flex flex-1 flex-col items-center gap-2 max-w-xl relative">
         {(audioFormat || isLossless) && (
-          <div className="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-none z-10">
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 pointer-events-none z-30">
             <LosslessBadge format={audioFormat ?? 'lossless'} />
           </div>
         )}

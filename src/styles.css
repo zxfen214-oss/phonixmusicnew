@@ -46,6 +46,17 @@
 .amll-lyrics-host [class*="lyricBgLine"][class*="_active"] {
   opacity: 0.55 !important;
 }
+.amll-lyrics-contrast,
+.amll-lyrics-contrast * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: none !important;
+}
+.amll-lyrics-contrast [class*="lyricMainLine"][class*="_active"],
+.amll-lyrics-contrast [class*="lyricLine"][class*="_active"] {
+  color: #ee5365 !important;
+  -webkit-text-fill-color: #ee5365 !important;
+}
 @media (max-width: 767px) {
   .amll-lyrics-host-mobile {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 70%, transparent 96%);
@@ -159,6 +170,18 @@
   --gradient-surface: linear-gradient(180deg, hsl(0 0% 5%) 0%, hsl(0 0% 8%) 100%);
   --shadow-soft: 0 1px 2px hsl(0 0% 0% / 0.4), 0 8px 24px -8px hsl(0 0% 0% / 0.5);
   --shadow-lift: 0 4px 12px -4px hsl(0 0% 0% / 0.55), 0 16px 48px -12px hsl(0 0% 0% / 0.7);
+}
+
+.increase-contrast {
+  --background: 0 0% 0%;
+  --card: 0 0% 4%;
+  --secondary: 0 0% 10%;
+  --accent: 353 82% 63%;
+  --ring: 353 82% 63%;
+  --brand-1: 353 82% 63%;
+  --brand-2: 353 82% 63%;
+  --brand-3: 353 82% 63%;
+  --glass-bg: 0 0% 4% / 0.82;
 }
 
 @theme inline {
@@ -370,6 +393,21 @@
   background-clip: text;
   color: transparent;
   animation: gradient-x 8s ease infinite;
+}
+
+.increase-contrast .text-gradient-animated {
+  animation: none;
+  background: hsl(var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.increase-contrast .brand-blob,
+.increase-contrast .mesh-background,
+.increase-contrast .animate-pulse-glow,
+.increase-contrast .animate-float {
+  animation: none !important;
+  opacity: 0 !important;
 }
 
 /* Equalizer bars (now-playing indicator) */

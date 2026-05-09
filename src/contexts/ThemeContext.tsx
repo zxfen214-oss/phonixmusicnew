@@ -4,8 +4,10 @@ type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
+  increaseContrast: boolean;
   toggleTheme: () => void;
   setTheme: (theme: Theme) => void;
+  setIncreaseContrast: (enabled: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -19,6 +21,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
     return "dark";
   });
+  const [increaseContrast, setIncreaseContrastState] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("phonix-increase-contrast") === "true";
+    }
+    return false;
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -26,6 +34,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.classList.add(theme);
     localStorage.setItem("phonix-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.toggle("increase-contrast", increaseContrast);
+    localStorage.setItem("phonix-increase-contrast", String(increaseContrast));
+  }, [increaseContrast]);
 
   const toggleTheme = () => {
     setThemeState(prev => (prev === "light" ? "dark" : "light"));
@@ -35,8 +49,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setThemeState(newTheme);
   };
 
+  const setIncreaseContrast = (enabled: boolean) => {
+    setIncreaseContrastState(enabled);
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, increaseContrast, toggleTheme, setTheme, setIncreaseContrast }}>
       {children}
     </ThemeContext.Provider>
   );

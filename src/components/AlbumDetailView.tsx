@@ -1,27 +1,28 @@
-import { Playlist, Track } from "@/types/music";
+import { Track } from "@/types/music";
 import { usePlayer } from "@/contexts/PlayerContext";
 import { TrackRow } from "./TrackRow";
-import { ArrowLeft, Play, Shuffle, ListMusic } from "lucide-react";
+import { ArrowLeft, Disc3, Play, Shuffle } from "lucide-react";
 
-interface Props {
-  playlist: Playlist;
+interface AlbumDetailViewProps {
+  albumName: string;
+  tracks: Track[];
   onBack: () => void;
   onViewAlbum?: (track: Track) => void;
 }
 
 function shuffleArray<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [copy[i], copy[j]] = [copy[j], copy[i]];
   }
-  return a;
+  return copy;
 }
 
-export function PlaylistDetailView({ playlist, onBack, onViewAlbum }: Props) {
+export function AlbumDetailView({ albumName, tracks, onBack, onViewAlbum }: AlbumDetailViewProps) {
   const { playTrack } = usePlayer();
-  const tracks = playlist.tracks;
-  const cover = tracks[0]?.artwork;
+  const cover = tracks.find((track) => track.artwork)?.artwork;
+  const artists = Array.from(new Set(tracks.map((track) => track.artist).filter(Boolean))).slice(0, 3);
 
   const handlePlayAll = () => {
     if (tracks.length > 0) playTrack(tracks[0], tracks);
@@ -36,17 +37,13 @@ export function PlaylistDetailView({ playlist, onBack, onViewAlbum }: Props) {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       <div className="px-4 md:px-8 py-5 border-b border-border/60 flex items-center gap-3">
-        <button
-          onClick={onBack}
-          className="icon-button h-9 w-9 flex-shrink-0"
-          aria-label="Back to playlists"
-        >
+        <button onClick={onBack} className="icon-button h-9 w-9 flex-shrink-0" aria-label="Back">
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="min-w-0">
-          <h1 className="text-xl md:text-2xl font-bold truncate">{playlist.name}</h1>
-          <p className="text-xs text-muted-foreground">
-            {tracks.length} {tracks.length === 1 ? "track" : "tracks"}
+          <h1 className="text-xl md:text-2xl font-bold truncate">{albumName}</h1>
+          <p className="text-xs text-muted-foreground truncate">
+            {artists.join(", ") || "Album"} · {tracks.length} {tracks.length === 1 ? "track" : "tracks"}
           </p>
         </div>
       </div>
@@ -55,10 +52,10 @@ export function PlaylistDetailView({ playlist, onBack, onViewAlbum }: Props) {
         <div className="flex flex-col sm:flex-row gap-5 sm:gap-6 items-start sm:items-end mb-6">
           <div className="h-40 w-40 sm:h-48 sm:w-48 rounded-2xl overflow-hidden shadow-lift bg-secondary flex-shrink-0">
             {cover ? (
-              <img src={cover} alt={playlist.name} className="h-full w-full object-cover" />
+              <img src={cover} alt={albumName} className="h-full w-full object-cover" />
             ) : (
               <div className="h-full w-full flex items-center justify-center bg-gradient-brand-soft">
-                <ListMusic className="h-16 w-16 text-foreground/40" />
+                <Disc3 className="h-16 w-16 text-foreground/40" />
               </div>
             )}
           </div>
@@ -84,12 +81,12 @@ export function PlaylistDetailView({ playlist, onBack, onViewAlbum }: Props) {
 
         {tracks.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
-            <p>This playlist is empty.</p>
+            <p>No songs found for this album.</p>
           </div>
         ) : (
           <div className="space-y-1">
-            {tracks.map((track, i) => (
-              <TrackRow key={track.id} track={track} index={i} tracks={tracks} onViewAlbum={onViewAlbum} />
+            {tracks.map((track, index) => (
+              <TrackRow key={track.id} track={track} index={index} tracks={tracks} onViewAlbum={onViewAlbum} />
             ))}
           </div>
         )}

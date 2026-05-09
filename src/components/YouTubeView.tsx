@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AdminSongEditor } from "./AdminSongEditor";
 import { RequestAdminDialog } from "./RequestAdminDialog";
 import { AddToPlaylistDialog } from "./AddToPlaylistDialog";
+import { AlbumDetailView } from "./AlbumDetailView";
 import { AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -35,6 +36,7 @@ export function YouTubeView() {
   const [editingTrack, setEditingTrack] = useState<Track | null>(null);
   const [requestTrack, setRequestTrack] = useState<Track | null>(null);
   const [playlistTrack, setPlaylistTrack] = useState<Track | null>(null);
+  const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
   const [adminSongs, setAdminSongs] = useState<Map<string, { title: string; artist: string; cover_url: string | null }>>(new Map());
   
   const { currentTrack, isPlaying, playTrack, pauseTrack, resumeTrack } = usePlayer();
@@ -151,6 +153,9 @@ export function YouTubeView() {
 
   const verifiedResults = results.filter((t) => t.isEdited);
   const otherResults = results.filter((t) => !t.isEdited);
+  const selectedAlbumTracks = selectedAlbum
+    ? results.filter((track) => track.album.trim().toLowerCase() === selectedAlbum.trim().toLowerCase())
+    : [];
 
   const renderRow = (track: Track, opts: { featured?: boolean }) => {
     const isCurrentTrack = currentTrack?.id === track.id;
@@ -257,6 +262,10 @@ export function YouTubeView() {
               <ListPlus className="h-4 w-4 mr-2" />
               Add to Playlist
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSelectedAlbum(track.album)} disabled={!track.album}>
+              <Youtube className="h-4 w-4 mr-2" />
+              View Album
+            </DropdownMenuItem>
             {isAdmin ? (
               <DropdownMenuItem onClick={() => handleAdminEdit(track)} className="text-accent">
                 <Shield className="h-4 w-4 mr-2" />
@@ -273,6 +282,17 @@ export function YouTubeView() {
       </div>
     );
   };
+
+  if (selectedAlbum) {
+    return (
+      <AlbumDetailView
+        albumName={selectedAlbum}
+        tracks={selectedAlbumTracks}
+        onBack={() => setSelectedAlbum(null)}
+        onViewAlbum={(track) => setSelectedAlbum(track.album)}
+      />
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">

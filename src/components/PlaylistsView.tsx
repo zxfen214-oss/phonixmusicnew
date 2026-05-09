@@ -3,22 +3,43 @@ import { useLibrary } from "@/contexts/LibraryContext";
 import { PlaylistCard } from "./PlaylistCard";
 import { CreatePlaylistDialog } from "./CreatePlaylistDialog";
 import { PlaylistDetailView } from "./PlaylistDetailView";
+import { AlbumDetailView } from "./AlbumDetailView";
+import { Track } from "@/types/music";
 import { Plus, ListMusic } from "lucide-react";
 
 export function PlaylistsView() {
-  const { playlists } = useLibrary();
+  const { playlists, tracks } = useLibrary();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
+  const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
 
   const selectedPlaylist = selectedPlaylistId
     ? playlists.find((p) => p.id === selectedPlaylistId) ?? null
     : null;
+
+  const openAlbum = (track: Track) => {
+    setSelectedAlbum(track.album);
+    setSelectedPlaylistId(null);
+  };
+
+  if (selectedAlbum) {
+    const normalized = selectedAlbum.trim().toLowerCase();
+    return (
+      <AlbumDetailView
+        albumName={selectedAlbum}
+        tracks={tracks.filter((track) => track.album.trim().toLowerCase() === normalized)}
+        onBack={() => setSelectedAlbum(null)}
+        onViewAlbum={openAlbum}
+      />
+    );
+  }
 
   if (selectedPlaylist) {
     return (
       <PlaylistDetailView
         playlist={selectedPlaylist}
         onBack={() => setSelectedPlaylistId(null)}
+        onViewAlbum={openAlbum}
       />
     );
   }
