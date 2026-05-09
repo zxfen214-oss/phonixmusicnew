@@ -841,9 +841,9 @@ function SecondaryTextLine({ text, isActive, isMobile }: { text: string; isActiv
 
 // ─── Lyrics content (shared between desktop & mobile) ───
 function LyricsContent({
-  visibleLyrics, karaokeEnabled, karaokeWords, smoothTime, lyricsSpeed, bounceIntensity, isLoadingLyrics, isMobile, defaultAlignment, mobileCharLimit,
+  visibleLyrics, karaokeEnabled, karaokeWords, smoothTime, lyricsSpeed, bounceIntensity, isLoadingLyrics, isMobile, defaultAlignment, mobileCharLimit, increaseContrast = false,
 }: {
-  visibleLyrics: VisibleLyricItem[]; karaokeEnabled: boolean; karaokeWords: KaraokeWord[]; smoothTime: number; lyricsSpeed: number; bounceIntensity: number; isLoadingLyrics: boolean; isMobile: boolean; defaultAlignment?: 'left' | 'right'; mobileCharLimit?: number;
+  visibleLyrics: VisibleLyricItem[]; karaokeEnabled: boolean; karaokeWords: KaraokeWord[]; smoothTime: number; lyricsSpeed: number; bounceIntensity: number; isLoadingLyrics: boolean; isMobile: boolean; defaultAlignment?: 'left' | 'right'; mobileCharLimit?: number; increaseContrast?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -893,10 +893,10 @@ function LyricsContent({
               <MusicIndicator currentTime={smoothTime} startTime={lineTime} endTime={musicEnd} />
             ) : !isIntro && elrcWords && elrcWords.length > 0 ? (
               <>
-                <ELRCLine words={elrcWords} currentTime={smoothTime} isMobile={isMobile} frozen={!isActive && smoothTime >= nextLineTime} charLimit={mobileCharLimit} />
+                <ELRCLine words={elrcWords} currentTime={smoothTime} isMobile={isMobile} frozen={!isActive && smoothTime >= nextLineTime} charLimit={mobileCharLimit} increaseContrast={increaseContrast} />
                 {nlCompanionText && nlCompanionElrcWords && nlCompanionElrcWords.length > 0 ? (
                   <div style={{ marginTop: '12px', opacity: companionOpacity, transition: 'opacity 250ms ease-out' }}>
-                    <ELRCLine words={nlCompanionElrcWords} currentTime={smoothTime} isMobile={isMobile} frozen={!isActive && smoothTime >= nextLineTime} charLimit={mobileCharLimit} />
+                    <ELRCLine words={nlCompanionElrcWords} currentTime={smoothTime} isMobile={isMobile} frozen={!isActive && smoothTime >= nextLineTime} charLimit={mobileCharLimit} increaseContrast={increaseContrast} />
                   </div>
                 ) : nlCompanionText && (
                   <p dir="auto" style={{ fontSize, fontWeight: 700, color: 'rgba(255,255,255,1)', unicodeBidi: "plaintext", lineHeight: 1.4, marginTop: '12px', margin: 0 }}>
@@ -911,10 +911,10 @@ function LyricsContent({
               </>
             ) : !isIntro && karaokeEnabled ? (
               <>
-                <MemoKaraokeLine text={text} words={karaokeWords} lineIndex={index} lineStartTime={lineTime} lineEndTime={nextLineTime} currentTime={smoothTime} isCurrentLine={isActive} isMobile={isMobile} charLimit={mobileCharLimit} />
+                <MemoKaraokeLine text={text} words={karaokeWords} lineIndex={index} lineStartTime={lineTime} lineEndTime={nextLineTime} currentTime={smoothTime} isCurrentLine={isActive} isMobile={isMobile} charLimit={mobileCharLimit} increaseContrast={increaseContrast} />
                 {nlCompanionText && nlCompanionTime != null && nlCompanionEndTime != null ? (
                   <div style={{ marginTop: '12px', opacity: companionOpacity, transition: 'opacity 250ms ease-out' }}>
-                    <MemoKaraokeLine text={nlCompanionText} words={karaokeWords} lineIndex={index + 1} lineStartTime={nlCompanionTime} lineEndTime={nlCompanionEndTime} currentTime={smoothTime} isCurrentLine={isActive} isMobile={isMobile} charLimit={mobileCharLimit} />
+                    <MemoKaraokeLine text={nlCompanionText} words={karaokeWords} lineIndex={index + 1} lineStartTime={nlCompanionTime} lineEndTime={nlCompanionEndTime} currentTime={smoothTime} isCurrentLine={isActive} isMobile={isMobile} charLimit={mobileCharLimit} increaseContrast={increaseContrast} />
                   </div>
                 ) : nlCompanionText && (
                   <p dir="auto" style={{ fontSize, fontWeight: 700, color: 'rgba(255,255,255,1)', unicodeBidi: "plaintext", lineHeight: 1.4, marginTop: '12px', margin: 0 }}>
@@ -937,7 +937,7 @@ function LyricsContent({
                     fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
                     fontSize,
                     fontWeight: isActive ? 700 : 600,
-                    color: isActive ? "#ffffff" : "rgba(255, 255, 255, 0.35)",
+                    color: increaseContrast ? "#ffffff" : isActive ? "#ffffff" : "rgba(255, 255, 255, 0.35)",
                     unicodeBidi: "plaintext",
                     lineHeight: 1.4,
                     margin: 0,
