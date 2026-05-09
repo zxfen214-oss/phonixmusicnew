@@ -790,7 +790,7 @@ function useAppleMusicStyles(
 
 // ─── Bracket sub-line: smoothly opens space (pushing upcoming lines down)
 // before fading text in; collapses space only after the main line moves on.
-function SecondaryTextLine({ text, isActive, isMobile }: { text: string; isActive: boolean; isMobile: boolean }) {
+function SecondaryTextLine({ text, isActive, isMobile, increaseContrast = false }: { text: string; isActive: boolean; isMobile: boolean; increaseContrast?: boolean }) {
   const [spaceOpen, setSpaceOpen] = useState(false);
   const [textVisible, setTextVisible] = useState(false);
 
@@ -825,7 +825,7 @@ function SecondaryTextLine({ text, isActive, isMobile }: { text: string; isActiv
           style={{
             fontSize: isMobile ? '18px' : '22px',
             fontWeight: 500,
-            color: isActive ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.2)',
+            color: increaseContrast ? '#ffffff' : isActive ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.2)',
             unicodeBidi: 'plaintext',
             lineHeight: 1.0,
             margin: 0,
@@ -907,7 +907,7 @@ function LyricsContent({
                   </p>
                 )}
                 {secondaryText && (
-                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} />
+                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} increaseContrast={increaseContrast} />
                 )}
               </>
             ) : !isIntro && karaokeEnabled ? (
@@ -925,7 +925,7 @@ function LyricsContent({
                   </p>
                 )}
                 {secondaryText && (
-                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} />
+                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} increaseContrast={increaseContrast} />
                 )}
               </>
             ) : isIntro ? (
@@ -956,7 +956,7 @@ function LyricsContent({
                   </p>
                 )}
                 {secondaryText && (
-                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} />
+                  <SecondaryTextLine text={secondaryText} isActive={isActive} isMobile={isMobile} increaseContrast={increaseContrast} />
                 )}
               </>
             )}
