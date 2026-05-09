@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { usePlayer } from "@/contexts/PlayerContext";
 import MarqueeText from "@/components/MarqueeText";
-import { Volume2, List } from "lucide-react";
+import { Volume2, List, Shuffle, Repeat, Repeat1 } from "lucide-react";
 import { LosslessBadge } from "./LosslessBadge";
 import { motion, AnimatePresence, useMotionValue, PanInfo } from "framer-motion";
 import iconPlay from "@/assets/icon-play.png";
@@ -37,6 +37,10 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
     isLossless,
     audioFormat,
     hasLyrics,
+    shuffle,
+    repeat,
+    toggleShuffle,
+    toggleRepeat,
     pauseTrack,
     resumeTrack,
     nextTrack,
@@ -125,7 +129,10 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
         >
           {/* AMLL MeshGradient background — matches the lyrics tab */}
           <div className="absolute inset-0 z-0" style={{ background: '#000' }}>
-            <LyricsBackground albumSrc={currentTrack.artwork} flowSpeed={2} />
+            <div className="absolute inset-0 opacity-60">
+              <LyricsBackground albumSrc={currentTrack.artwork} flowSpeed={2} />
+            </div>
+            <div className="absolute inset-0 bg-black/30" />
           </div>
 
           {/* Content */}
@@ -185,8 +192,15 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
               </div>
             )}
 
-            {/* Playback Controls - white icons */}
-            <div className="flex items-center justify-center gap-10 mb-6">
+            {/* Playback Controls — matches PC layout (shuffle / prev / play / next / repeat) */}
+            <div className="flex items-center justify-between gap-2 mb-6 px-2">
+              <button
+                onClick={toggleShuffle}
+                className={cn("p-2 active:scale-90 transition-transform", shuffle ? "text-white" : "text-white/50")}
+                title="Shuffle"
+              >
+                <Shuffle className="w-5 h-5" />
+              </button>
               <button onClick={previousTrack} className="p-2 active:scale-90 transition-transform">
                 <img src={iconPrev} alt="Previous" className="w-8 h-8 brightness-0 invert" />
               </button>
@@ -195,11 +209,18 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
                   className="transition-all duration-[80ms] ease-in-out"
                   style={{ transform: isAnimating ? "scale(0)" : "scale(1)", opacity: isAnimating ? 0 : 1 }}
                 >
-                  <img src={displayPlaying ? iconPause : iconPlay} alt={displayPlaying ? "Pause" : "Play"} className="w-11 h-11 brightness-0 invert" />
+                  <img src={displayPlaying ? iconPause : iconPlay} alt={displayPlaying ? "Pause" : "Play"} className="w-12 h-12 brightness-0 invert" />
                 </div>
               </button>
               <button onClick={nextTrack} className="p-2 active:scale-90 transition-transform">
                 <img src={iconNext} alt="Next" className="w-8 h-8 brightness-0 invert" />
+              </button>
+              <button
+                onClick={toggleRepeat}
+                className={cn("p-2 active:scale-90 transition-transform", repeat !== 'none' ? "text-white" : "text-white/50")}
+                title="Repeat"
+              >
+                {repeat === 'one' ? <Repeat1 className="w-5 h-5" /> : <Repeat className="w-5 h-5" />}
               </button>
             </div>
 
