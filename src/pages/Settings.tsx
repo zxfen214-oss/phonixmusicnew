@@ -48,10 +48,10 @@ export default function Settings({ embedded = false }: SettingsProps) {
   };
 
   return (
-    <PageTransition className={cn("bg-background", !embedded && "min-h-screen")}>
+    <PageTransition className={cn("bg-background", embedded ? "h-full overflow-y-auto" : "min-h-screen")}>
       <div className={cn(
         "mx-auto max-w-2xl",
-        embedded ? "px-4 md:px-6 py-6 h-full overflow-y-auto pb-32" : "container px-4 py-8 pb-32 overflow-y-auto max-h-[100dvh]"
+        embedded ? "px-4 md:px-6 py-6 pb-40" : "container px-4 py-8 pb-32 overflow-y-auto max-h-[100dvh]"
       )}>
         <FadeIn>
           <div className="flex items-center gap-4 mb-8">
