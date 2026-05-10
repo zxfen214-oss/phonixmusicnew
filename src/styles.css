@@ -22,6 +22,8 @@
   line-height: 1.6 !important;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif !important;
+  font-weight: 800 !important;
 }
 .amll-lyrics-host > div,
 .amll-lyrics-host [class*="lyricMainLine"],
@@ -31,6 +33,8 @@
 .amll-lyrics-host div {
   overflow: visible !important;
   line-height: 1.6 !important;
+  font-family: inherit !important;
+  font-weight: 800 !important;
 }
 .amll-lyrics-host [class*="lyricBgLine"] {
   opacity: 0 !important;
@@ -45,6 +49,14 @@
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   text-shadow: none !important;
+}
+/* High contrast: active (currently-singing) AMLL line turns brand red. */
+.increase-contrast .amll-lyrics-host [class*="lyricMainLine"][class*="_active"],
+.increase-contrast .amll-lyrics-host [class*="lyricMainLine"][class*="_active"] *,
+.increase-contrast .amll-lyrics-host [class*="lyricLine"][class*="_active"],
+.increase-contrast .amll-lyrics-host [class*="lyricLine"][class*="_active"] * {
+  color: #ee5365 !important;
+  -webkit-text-fill-color: #ee5365 !important;
 }
 /* Non-karaoke (AMLL) lines stay white in high contrast — no red active state. */
 @media (max-width: 767px) {
