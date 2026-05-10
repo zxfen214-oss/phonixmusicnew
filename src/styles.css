@@ -18,12 +18,6 @@
 }
 
 /* AMLL overrides */
-.amll-lyrics-host,
-.amll-lyrics-host * {
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.01em;
-}
 .amll-lyrics-host {
   line-height: 1.6 !important;
   padding-top: 0.5em;
@@ -52,11 +46,7 @@
   -webkit-text-fill-color: #ffffff !important;
   text-shadow: none !important;
 }
-.amll-lyrics-contrast [class*="lyricMainLine"][class*="_active"],
-.amll-lyrics-contrast [class*="lyricLine"][class*="_active"] {
-  color: #ee5365 !important;
-  -webkit-text-fill-color: #ee5365 !important;
-}
+/* Non-karaoke (AMLL) lines stay white in high contrast — no red active state. */
 @media (max-width: 767px) {
   .amll-lyrics-host-mobile {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 70%, transparent 96%);
@@ -408,6 +398,11 @@
 .increase-contrast .animate-float {
   animation: none !important;
   opacity: 0 !important;
+}
+
+/* High-contrast: artist name uses the brand red used by player icons. */
+.increase-contrast .artist-name {
+  color: #ee5365 !important;
 }
 
 /* Equalizer bars (now-playing indicator) */
