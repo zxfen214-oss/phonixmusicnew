@@ -1143,6 +1143,11 @@ export default function Admin() {
                   <DuplicatesView songs={songs} onDelete={handleDelete} />
                 </TabsContent>
 
+                {/* Albums Tab */}
+                <TabsContent value="albums" className="mt-0">
+                  <AdminAlbumsManager songs={songs} onChanged={fetchSongs} />
+                </TabsContent>
+
                 {/* Accounts Tab */}
                 <TabsContent value="accounts" className="mt-0">
                   {isLoadingAccounts ? (
