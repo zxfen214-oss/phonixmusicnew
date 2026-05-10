@@ -26,12 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         _user_id: userId,
         _role: 'admin'
       });
-      
-      if (!error && data) {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
+      setIsAdmin(!error && !!data);
     } catch {
       setIsAdmin(false);
     }
@@ -43,15 +38,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        setIsLoading(false);
-        
-        // Defer admin check
+
         if (session?.user) {
+          // Keep loading true until admin role is resolved so guarded
+          // pages (e.g. /admin) don't redirect prematurely.
+          setIsLoading(true);
           setTimeout(() => {
-            checkAdminRole(session.user.id);
+            checkAdminRole(session.user.id).finally(() => setIsLoading(false));
           }, 0);
         } else {
           setIsAdmin(false);
+          setIsLoading(false);
         }
       }
     );
@@ -60,10 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setIsLoading(false);
-      
+
       if (session?.user) {
-        checkAdminRole(session.user.id);
+        checkAdminRole(session.user.id).finally(() => setIsLoading(false));
+      } else {
+        setIsLoading(false);
       }
     });
 
