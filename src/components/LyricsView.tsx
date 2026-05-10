@@ -1500,7 +1500,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
               <h2 className="text-white truncate" style={{ fontSize: '22px', fontWeight: 600, marginTop: '24px', maxWidth: showLyricsPanel ? '360px' : '400px', textAlign: showLyricsPanel ? 'left' : 'center' }}>
                 {currentTrack.title}
               </h2>
-              <p style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.7)', marginTop: '4px', textAlign: showLyricsPanel ? 'left' : 'center' }}>
+              <p className="artist-name" style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.7)', marginTop: '4px', textAlign: showLyricsPanel ? 'left' : 'center' }}>
                 {currentTrack.artist}
               </p>
 
@@ -1672,7 +1672,7 @@ export function LyricsView({ onClose }: LyricsViewProps) {
               <h2 className="text-white truncate" style={{ fontSize: '20px', fontWeight: 700 }}>
                 {currentTrack.title}
               </h2>
-              <p className="truncate" style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>
+              <p className="artist-name truncate" style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>
                 {currentTrack.artist}
               </p>
             </div>
