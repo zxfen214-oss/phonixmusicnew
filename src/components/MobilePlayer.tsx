@@ -167,7 +167,7 @@ export default function MobilePlayer({ isOpen, onClose, onOpenLyrics }: MobilePl
             {/* Track Info with Marquee */}
             <div className="mb-4">
               <MarqueeText text={currentTrack.title} className="text-lg font-semibold text-white leading-tight" />
-              <p className="text-sm text-white/60 mt-0.5">{currentTrack.artist}</p>
+              <p className="artist-name text-sm text-white/60 mt-0.5">{currentTrack.artist}</p>
             </div>
 
             {/* Progress Bar */}

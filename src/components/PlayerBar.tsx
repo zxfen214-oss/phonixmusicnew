@@ -111,7 +111,7 @@ export function PlayerBar({ onOpenLyrics, onOpenMobilePlayer }: PlayerBarProps) 
         </div>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{currentTrack.title}</p>
-          <p className="truncate text-xs text-muted-foreground">{currentTrack.artist}</p>
+          <p className="artist-name truncate text-xs text-muted-foreground">{currentTrack.artist}</p>
         </div>
       </div>
 

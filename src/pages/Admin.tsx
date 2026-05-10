@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { AdminAlbumsManager } from "@/components/AdminAlbumsManager";
 
 interface Song {
   id: string;
@@ -805,6 +806,10 @@ export default function Admin() {
                       <Copy className="h-4 w-4" />
                       Duplicates
                     </TabsTrigger>
+                    <TabsTrigger value="albums" className="gap-2">
+                      <ListMusic className="h-4 w-4" />
+                      Albums
+                    </TabsTrigger>
                     <TabsTrigger value="accounts" className="gap-2" onClick={() => { if (accountUsers.length === 0) fetchAccountUsers(); }}>
                       <Users className="h-4 w-4" />
                       Accounts
@@ -1136,6 +1141,11 @@ export default function Admin() {
                 {/* Duplicates Tab */}
                 <TabsContent value="duplicates" className="mt-0">
                   <DuplicatesView songs={songs} onDelete={handleDelete} />
+                </TabsContent>
+
+                {/* Albums Tab */}
+                <TabsContent value="albums" className="mt-0">
+                  <AdminAlbumsManager songs={songs} onChanged={fetchSongs} />
                 </TabsContent>
 
                 {/* Accounts Tab */}
