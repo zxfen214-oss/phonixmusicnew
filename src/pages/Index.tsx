@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { preloadPlayerIcons } from "@/lib/preloadPlayerAssets";
 import { Sidebar } from "@/components/Sidebar";
@@ -53,22 +54,15 @@ function AppContent() {
     return null;
   }
 
-  const renderView = () => {
-    switch (activeView) {
-      case "home":
-        return <HomeView key="home" />;
-      case "library":
-        return <LibraryView key="library" />;
-      case "playlists":
-        return <PlaylistsView key="playlists" />;
-      case "youtube":
-        return <YouTubeView key="youtube" />;
-      case "settings":
-        return <Settings key="settings" embedded />;
-      default:
-        return <HomeView key="home" />;
-    }
-  };
+  // Render all views once and toggle visibility via CSS so switching tabs
+  // doesn't unmount/remount (preserves scroll, queries, search state, etc.)
+  const views: Array<{ id: string; node: React.ReactNode }> = [
+    { id: "home", node: <HomeView /> },
+    { id: "library", node: <LibraryView /> },
+    { id: "playlists", node: <PlaylistsView /> },
+    { id: "youtube", node: <YouTubeView /> },
+    { id: "settings", node: <Settings embedded /> },
+  ];
 
   const handleOpenLyrics = () => {
     if (currentTrack) {
@@ -87,7 +81,18 @@ function AppContent() {
     <div className="flex h-screen w-full overflow-hidden bg-background pt-[env(safe-area-inset-top)]">
       <Sidebar activeView={activeView} onViewChange={setActiveView} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-hidden">{renderView()}</div>
+        <div className="flex-1 overflow-hidden relative">
+          {views.map((v) => (
+            <div
+                key={v.id}
+                className="absolute inset-0 overflow-hidden"
+                style={{ display: activeView === v.id ? "block" : "none" }}
+                aria-hidden={activeView !== v.id}
+              >
+                {v.node}
+              </div>
+          ))}
+        </div>
         <PlayerBar onOpenLyrics={handleOpenLyrics} onOpenMobilePlayer={handleOpenMobilePlayer} />
       </div>
       <MobileNav activeView={activeView} onViewChange={setActiveView} />

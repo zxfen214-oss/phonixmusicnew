@@ -44,21 +44,27 @@
 .amll-lyrics-host [class*="lyricBgLine"][class*="_active"] {
   opacity: 0.55 !important;
 }
+/* High contrast: AMLL renders non-karaoke lyrics — every line stays white.
+   Inactive lines keep their natural opacity (set by AMLL), active lines are
+   fully opaque white. No red tint anywhere in the AMLL view. */
 .amll-lyrics-contrast,
-.amll-lyrics-contrast * {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  text-shadow: none !important;
-}
-/* High contrast: active (currently-singing) AMLL line turns brand red. */
+.amll-lyrics-contrast *,
+.increase-contrast .amll-lyrics-host,
+.increase-contrast .amll-lyrics-host *,
+.increase-contrast .amll-lyrics-host [class*="lyricMainLine"],
+.increase-contrast .amll-lyrics-host [class*="lyricMainLine"] *,
+.increase-contrast .amll-lyrics-host [class*="lyricLine"],
+.increase-contrast .amll-lyrics-host [class*="lyricLine"] *,
 .increase-contrast .amll-lyrics-host [class*="lyricMainLine"][class*="_active"],
 .increase-contrast .amll-lyrics-host [class*="lyricMainLine"][class*="_active"] *,
 .increase-contrast .amll-lyrics-host [class*="lyricLine"][class*="_active"],
 .increase-contrast .amll-lyrics-host [class*="lyricLine"][class*="_active"] * {
-  color: #ee5365 !important;
-  -webkit-text-fill-color: #ee5365 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: none !important;
+  background: transparent !important;
+  background-image: none !important;
 }
-/* Non-karaoke (AMLL) lines stay white in high contrast — no red active state. */
 @media (max-width: 767px) {
   .amll-lyrics-host-mobile {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 70%, transparent 96%);
