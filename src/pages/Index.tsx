@@ -55,7 +55,7 @@ function AppContent() {
 
   // Render all views once and toggle visibility via CSS so switching tabs
   // doesn't unmount/remount (preserves scroll, queries, search state, etc.)
-  const views: Array<{ id: string; node: JSX.Element }> = [
+  const views: Array<{ id: string; node: React.ReactNode }> = [
     { id: "home", node: <HomeView /> },
     { id: "library", node: <LibraryView /> },
     { id: "playlists", node: <PlaylistsView /> },
