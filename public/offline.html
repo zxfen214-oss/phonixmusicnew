@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>You're offline — PhonixMusic</title>
+<link rel="icon" href="/favicon.webp" type="image/webp" />
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    background: radial-gradient(120% 80% at 30% 10%, #2a0d12 0%, #0a0a0a 55%, #000 100%);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; -webkit-font-smoothing: antialiased;
+  }
+  .card {
+    max-width: 420px; width: 100%; text-align: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 32px 24px;
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+  }
+  .icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    margin: 0 auto 18px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #ee5365, #ff7849);
+    box-shadow: 0 10px 30px -8px rgba(238, 83, 101, 0.55);
+  }
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.01em; }
+  p { color: rgba(255,255,255,0.65); font-size: 14px; line-height: 1.55; margin: 0 0 22px; }
+  button {
+    appearance: none; border: 0; cursor: pointer;
+    background: linear-gradient(135deg, #ee5365, #ff7849); color: #fff;
+    font-weight: 600; font-size: 14px; padding: 12px 20px; border-radius: 999px;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+    box-shadow: 0 8px 24px -8px rgba(238, 83, 101, 0.5);
+  }
+  button:hover { transform: translateY(-1px); box-shadow: 0 12px 30px -10px rgba(238, 83, 101, 0.65); }
+  .hint { margin-top: 16px; font-size: 12px; color: rgba(255,255,255,0.4); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12.55a11 11 0 0 1 14 0"/>
+        <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+        <line x1="12" y1="20" x2="12.01" y2="20"/>
+        <line x1="2" y1="2" x2="22" y2="22"/>
+      </svg>
+    </div>
+    <h1>You're offline</h1>
+    <p>We can't reach the network right now. Your downloaded songs are still available — open the app to keep listening.</p>
+    <button onclick="location.reload()">Try again</button>
+    <div class="hint">PhonixMusic · Offline mode</div>
+  </div>
+  <script>
+    window.addEventListener('online', () => location.reload());
+  </script>
+</body>
+</html>
