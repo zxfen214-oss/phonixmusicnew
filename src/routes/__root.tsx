@@ -7,6 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
 
@@ -114,6 +115,41 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!("serviceWorker" in navigator)) return;
+
+    // Guard: never register inside Lovable's iframe preview or *.lovable.app
+    // preview hosts — only run on the published site / installed PWA.
+    let inIframe = false;
+    try {
+      inIframe = window.self !== window.top;
+    } catch {
+      inIframe = true;
+    }
+    const host = window.location.hostname;
+    const isPreviewHost =
+      host.includes("id-preview--") ||
+      host.includes("lovableproject.com") ||
+      host.endsWith(".lovable.dev");
+
+    if (inIframe || isPreviewHost) {
+      // Clean up any SW that may have been registered previously in preview.
+      navigator.serviceWorker.getRegistrations().then((rs) => {
+        rs.forEach((r) => r.unregister());
+      });
+      return;
+    }
+
+    const onLoad = () => {
+      navigator.serviceWorker
+        .register("/sw.js", { scope: "/" })
+        .catch((err) => console.warn("SW registration failed", err));
+    };
+    if (document.readyState === "complete") onLoad();
+    else window.addEventListener("load", onLoad, { once: true });
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
