@@ -1,12 +1,13 @@
-// Phonix Music service worker — app-shell offline support.
-// NetworkFirst for HTML so a fresh deploy always wins when online,
-// CacheFirst for hashed static assets (immutable by build hash).
-const VERSION = 'v1';
-const SHELL_CACHE = `shell-${VERSION}`;
-const ASSET_CACHE = `assets-${VERSION}`;
+// Phonix Music service worker — versioned shell offline support.
+// Bump VERSION on every meaningful change to invalidate old caches.
+const VERSION = 'v2-2026-05-11';
+const SHELL_CACHE = `phonix-shell-${VERSION}`;
+const ASSET_CACHE = `phonix-assets-${VERSION}`;
+const OFFLINE_URL = '/offline.html';
 
 const SHELL_URLS = [
   '/',
+  OFFLINE_URL,
   '/manifest.webmanifest',
   '/favicon.ico',
   '/favicon.webp',
@@ -19,7 +20,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(SHELL_CACHE);
     await Promise.allSettled(SHELL_URLS.map((u) => cache.add(u)));
-    await self.skipWaiting();
+    // Don't auto-skipWaiting — wait for the page to ask via SKIP_WAITING.
   })());
 });
 
@@ -31,12 +32,17 @@ self.addEventListener('activate', (event) => {
         .filter((k) => k !== SHELL_CACHE && k !== ASSET_CACHE)
         .map((k) => caches.delete(k))
     );
+    if (self.registration.navigationPreload) {
+      try { await self.registration.navigationPreload.enable(); } catch {}
+    }
     await self.clients.claim();
   })());
 });
 
 self.addEventListener('message', (event) => {
-  if (event.data === 'SKIP_WAITING') self.skipWaiting();
+  if (event.data === 'SKIP_WAITING' || event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 function isAssetRequest(url) {
@@ -54,20 +60,19 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
-  // Never intercept API / auth / supabase routes
+  // Never intercept API / auth / oauth.
   if (
     url.pathname.startsWith('/api/') ||
     url.pathname.startsWith('/~oauth') ||
     url.pathname.startsWith('/auth/')
-  ) {
-    return;
-  }
+  ) return;
 
-  // HTML navigations: NetworkFirst, fallback to cached shell.
+  // HTML navigations: NetworkFirst → cached shell → offline.html.
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
     event.respondWith((async () => {
       try {
-        const fresh = await fetch(req);
+        const preload = 'preloadResponse' in event ? await event.preloadResponse : null;
+        const fresh = preload || await fetch(req);
         const cache = await caches.open(SHELL_CACHE);
         cache.put('/', fresh.clone()).catch(() => {});
         return fresh;
@@ -75,7 +80,8 @@ self.addEventListener('fetch', (event) => {
         const cache = await caches.open(SHELL_CACHE);
         const cached = (await cache.match(req)) || (await cache.match('/'));
         if (cached) return cached;
-        return new Response('Offline', { status: 503, statusText: 'Offline' });
+        const offline = await cache.match(OFFLINE_URL);
+        return offline || new Response('Offline', { status: 503, statusText: 'Offline' });
       }
     })());
     return;
