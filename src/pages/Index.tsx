@@ -82,10 +82,8 @@ function AppContent() {
       <Sidebar activeView={activeView} onViewChange={setActiveView} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-hidden relative">
-          {views.map((v) => {
-            const active = (activeView === v.id) || (activeView === "home" && !views.find(x => x.id === activeView));
-            return (
-              <div
+          {views.map((v) => (
+            <div
                 key={v.id}
                 className="absolute inset-0 overflow-hidden"
                 style={{ display: activeView === v.id ? "block" : "none" }}
@@ -93,8 +91,7 @@ function AppContent() {
               >
                 {v.node}
               </div>
-            );
-          })}
+          ))}
         </div>
         <PlayerBar onOpenLyrics={handleOpenLyrics} onOpenMobilePlayer={handleOpenMobilePlayer} />
       </div>
